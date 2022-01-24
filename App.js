@@ -11,12 +11,12 @@ const App = () => {
   );
 };
 
-// const white = "#fff";
+const white = "#fff";
 
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: white,
     flex: 1,
     justifyContent: "center",
   },
