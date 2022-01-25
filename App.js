@@ -9,12 +9,14 @@ import AddClub from "./src/screens/AddClub";
 import BookDetails from "./src/screens/BookDetails";
 import ClubDetails from "./src/screens/ClubDetails";
 import ClubList from "./src/screens/ClubList";
+import Header from "./src/components/Header";
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
+      <Header />
       <Stack.Navigator initialRouteName="Landing">
         <Stack.Screen name="Landing" component={Landing} />
         <Stack.Screen name="Home" component={Home} />
@@ -27,16 +29,5 @@ const App = () => {
     </NavigationContainer>
   );
 };
-
-// const white = "#fff";
-
-// const styles = StyleSheet.create({
-//   container: {
-//     alignItems: "center",
-//     backgroundColor: white,
-//     flex: 1,
-//     justifyContent: "center",
-//   },
-// });
 
 export default App;

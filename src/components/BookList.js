@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Text, View, Button } from "react-native";
 
 const BookList = ({ navigation }) => {
-  console.log(navigation);
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
