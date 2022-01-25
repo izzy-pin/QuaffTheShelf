@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, Button } from "react-native";
+import { Text, View, Pressable } from "react-native";
 
 const BookList = ({ navigation }) => {
   const [books, setBooks] = useState([]);
@@ -22,12 +22,13 @@ const BookList = ({ navigation }) => {
         {books.map((book, index) => {
           return (
             <li key={index}>
-              <Button
-                title={(book.title, book.img_url)}
+              <Pressable
                 onPress={() => {
                   navigation.navigate("BookDetails");
                 }}
-              />
+              >
+                {/* {(book.title, book.img_url)} */}
+              </Pressable>
             </li>
           );
         })}
