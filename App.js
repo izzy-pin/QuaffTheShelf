@@ -1,11 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-// import firebaseConfig from "./api-key";
-
-// import { initializeApp } from "firebase/app";
-
-// const app = initializeApp(firebaseConfig);
 
 const App = () => {
   return (
