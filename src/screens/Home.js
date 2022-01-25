@@ -14,6 +14,12 @@ const Home = ({ navigation }) => {
         }}
       />
       <BookList navigation={navigation} />
+      <Button
+        title="Groups I belong to"
+        onPress={() => {
+          navigation.navigate("ClubList");
+        }}
+      />
     </View>
   );
 };

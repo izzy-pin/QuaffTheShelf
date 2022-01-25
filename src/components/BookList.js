@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, Pressable } from "react-native";
+import { Text, View, Pressable, Image } from "react-native";
 
 const BookList = ({ navigation }) => {
   const [books, setBooks] = useState([]);
@@ -27,7 +27,8 @@ const BookList = ({ navigation }) => {
                   navigation.navigate("BookDetails");
                 }}
               >
-                {/* {(book.title, book.img_url)} */}
+                <Image source={{ uri: book.img_url }} style={imageStyle} />
+                <Text>{book.title}</Text>
               </Pressable>
             </li>
           );
@@ -36,5 +37,7 @@ const BookList = ({ navigation }) => {
     </View>
   );
 };
+
+const imageStyle = { width: 300, height: 100, resizeMode: "contain" };
 
 export default BookList;
