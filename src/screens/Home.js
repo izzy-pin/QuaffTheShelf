@@ -13,7 +13,7 @@ const Home = ({ navigation }) => {
           navigation.navigate("AddBook");
         }}
       />
-      <BookList />
+      <BookList navigation={navigation} />
     </View>
   );
 };
