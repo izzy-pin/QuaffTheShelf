@@ -10,6 +10,7 @@ import BookDetails from "./src/screens/BookDetails";
 import ClubDetails from "./src/screens/ClubDetails";
 import ClubList from "./src/screens/ClubList";
 import Header from "./src/components/Header";
+import JoinClub from "./src/screens/JoinClub";
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,7 @@ const App = () => {
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="AddBook" component={AddBook} />
         <Stack.Screen name="AddClub" component={AddClub} />
+        <Stack.Screen name="JoinClub" component={JoinClub} />
         <Stack.Screen name="BookDetails" component={BookDetails} />
         <Stack.Screen name="ClubDetails" component={ClubDetails} />
         <Stack.Screen name="ClubList" component={ClubList} />
