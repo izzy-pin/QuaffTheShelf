@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  onAuthStateChanged,
   // setPersistence,
   // browserSessionPersistence,
 } from "firebase/auth";
@@ -11,10 +12,27 @@ import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import app from "../../firebase-config";
 app; //<- added to pass linting!!
+
 const Landing = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [signedIn, setSignedIn] = useState(false);
+  const [signedIn, setSignedIn] = useState();
+  const auth = getAuth();
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setSignedIn(true);
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/firebase.User
+      const uid = user.uid;
+      console.log(uid);
+      // ...
+    } else {
+      setSignedIn(false);
+      // User is signed out
+      // ...
+    }
+  });
 
   const handleCreateAccount = () => {
     const auth = getAuth();
