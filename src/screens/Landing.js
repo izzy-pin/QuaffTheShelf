@@ -3,15 +3,19 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
+  // setPersistence,
+  // browserSessionPersistence,
 } from "firebase/auth";
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import app from "../../firebase-config";
 app; //<- added to pass linting!!
-const Landing = () => {
-  //may need to put navigation in as a prop
+const Landing = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [signedIn, setSignedIn] = useState(false);
+
   const handleCreateAccount = () => {
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password)
@@ -25,14 +29,32 @@ const Landing = () => {
   };
   const handleLogIn = () => {
     const auth = getAuth();
+    //setPersistence(auth, browserSessionPersistence)
+    //.then(() => {
     signInWithEmailAndPassword(auth, email, password)
+      //})
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log("logged in user", user.email);
+        setSignedIn(true);
+        navigation.navigate("Home");
       })
       .catch((err) => {
-        console.log(err.message);
+        console.log(err);
       });
+  };
+  const handleLogOut = () => {
+    const auth = getAuth();
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        setSignedIn(false);
+        signOut(auth)
+          .then(() => {})
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    });
   };
   return (
     <View>
@@ -49,9 +71,15 @@ const Landing = () => {
         ></TextInput>
       </View>
       <View>
-        <TouchableOpacity onPress={handleLogIn}>
-          <Text>Log In</Text>
-        </TouchableOpacity>
+        {signedIn === true ? (
+          <TouchableOpacity onPress={handleLogOut}>
+            <Text>Log Out</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={handleLogIn}>
+            <Text>Log In</Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity onPress={handleCreateAccount}>
           <Text>Create Account</Text>
         </TouchableOpacity>
