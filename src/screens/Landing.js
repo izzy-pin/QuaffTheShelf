@@ -5,8 +5,6 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  // setPersistence,
-  // browserSessionPersistence,
 } from "firebase/auth";
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import { useState } from "react";
@@ -22,15 +20,8 @@ const Landing = ({ navigation }) => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       setSignedIn(true);
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/firebase.User
-      const uid = user.uid;
-      console.log(uid);
-      // ...
     } else {
       setSignedIn(false);
-      // User is signed out
-      // ...
     }
   });
 
@@ -47,10 +38,7 @@ const Landing = ({ navigation }) => {
   };
   const handleLogIn = () => {
     const auth = getAuth();
-    //setPersistence(auth, browserSessionPersistence)
-    //.then(() => {
     signInWithEmailAndPassword(auth, email, password)
-      //})
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log("logged in user", user.email);
