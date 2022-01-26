@@ -1,8 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, Pressable, Image } from "react-native";
+import {
+  Text,
+  View,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  StatusBar,
+  Image,
+  Pressable,
+} from "react-native";
 
 const BookList = ({ navigation }) => {
   const [books, setBooks] = useState([]);
+
+  const Item = ({ title, img_url }) => {
+    return (
+      <View style={styles.item}>
+        <Pressable
+          onPress={() => {
+            navigation.navigate("BookDetails");
+          }}
+        >
+          <Text style={styles.title}>{title}</Text>
+          <Image style={imageStyle} source={{ uri: img_url }} />
+        </Pressable>
+      </View>
+    );
+  };
 
   useEffect(() => {
     setBooks([
@@ -15,29 +39,39 @@ const BookList = ({ navigation }) => {
     ]);
   }, []);
 
+  const renderItem = ({ item }) => {
+    return <Item title={item.title} img_url={item.img_url} />;
+  };
+
   return (
     <View>
-      <Text>Hello from BookList</Text>
-      <ul>
-        {books.map((book, index) => {
-          return (
-            <li key={index}>
-              <Pressable
-                onPress={() => {
-                  navigation.navigate("BookDetails");
-                }}
-              >
-                <Image source={{ uri: book.img_url }} style={imageStyle} />
-                <Text>{book.title}</Text>
-              </Pressable>
-            </li>
-          );
-        })}
-      </ul>
+      <Text>Hello from book list!</Text>
+      <SafeAreaView style={styles.container}>
+        <FlatList
+          data={books}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.img_url}
+        />
+      </SafeAreaView>
     </View>
   );
 };
 
 const imageStyle = { width: 300, height: 100, resizeMode: "contain" };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: StatusBar.currentHeight || 0,
+  },
+  item: {
+    marginHorizontal: 16,
+    marginVertical: 8,
+    padding: 20,
+  },
+  title: {
+    fontSize: 32,
+  },
+});
 
 export default BookList;
