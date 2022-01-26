@@ -6,18 +6,27 @@ import {
   SafeAreaView,
   StyleSheet,
   StatusBar,
+  Image,
+  Pressable,
 } from "react-native";
 
-const Item = ({ title }) => {
-  return (
-    <View>
-      <Text>{title}</Text>
-    </View>
-  );
-};
-
-const BookList = () => {
+const BookList = ({ navigation }) => {
   const [books, setBooks] = useState([]);
+
+  const Item = ({ title, img_url }) => {
+    return (
+      <View style={styles.item}>
+        <Pressable
+          onPress={() => {
+            navigation.navigate("BookDetails");
+          }}
+        >
+          <Text style={styles.title}>{title}</Text>
+          <Image style={imageStyle} source={{ uri: img_url }} />
+        </Pressable>
+      </View>
+    );
+  };
 
   useEffect(() => {
     setBooks([
@@ -31,7 +40,7 @@ const BookList = () => {
   }, []);
 
   const renderItem = ({ item }) => {
-    return <Item title={item.title} />;
+    return <Item title={item.title} img_url={item.img_url} />;
   };
 
   return (
@@ -48,22 +57,21 @@ const BookList = () => {
   );
 };
 
-// const imageStyle = { width: 300, height: 100, resizeMode: "contain" };
+const imageStyle = { width: 300, height: 100, resizeMode: "contain" };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: StatusBar.currentHeight || 0,
   },
-  // item: {
-  //   backgroundColor: "#f9c2ff",
-  //   padding: 20,
-  //   marginVertical: 8,
-  //   marginHorizontal: 16,
-  // },
-  // title: {
-  //   fontSize: 32,
-  // },
+  item: {
+    marginHorizontal: 16,
+    marginVertical: 8,
+    padding: 20,
+  },
+  title: {
+    fontSize: 32,
+  },
 });
 
 export default BookList;
