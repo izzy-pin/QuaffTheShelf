@@ -46,7 +46,17 @@ const Landing = ({ navigation }) => {
         navigation.navigate("Home");
       })
       .catch((err) => {
-        console.log(err);
+        switch (err.code) {
+          case "auth/invalid-email":
+            alert("You have entered an invalid email");
+            break;
+          default:
+            alert("Ooops I did it again!");
+            break;
+        }
+
+        console.dir(err);
+        console.log(err.message);
       });
   };
   const handleLogOut = () => {
