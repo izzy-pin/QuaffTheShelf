@@ -7,7 +7,7 @@ const Landing = ({ navigation }) => {
     <View>
       <Text>Hello from Landing</Text>
       <Button
-        title="Got to Home"
+        title="Go to Home"
         onPress={() => {
           navigation.navigate("Home");
         }}
