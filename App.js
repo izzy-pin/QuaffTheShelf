@@ -17,7 +17,6 @@ const Stack = createNativeStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      {/* <Header /> */}
       <Stack.Navigator
         initialRouteName="Landing"
         screenOptions={{ header: (props) => <Header {...props} /> }}
