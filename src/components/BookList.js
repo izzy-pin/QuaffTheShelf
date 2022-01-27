@@ -36,6 +36,24 @@ const BookList = ({ navigation }) => {
         img_url:
           "https://images-eu.ssl-images-amazon.com/images/I/51ZGxfriOfL._SY291_BO1,204,203,200_QL40_ML2_.jpg",
       },
+      {
+        title: "The Psychopath Test",
+        author: "Jon Ronson",
+        img_url:
+          "https://images-eu.ssl-images-amazon.com/images/I/51ZGxfriOfL._SY291_BO1,204,203,200_QL40_ML2_.jpg",
+      },
+      {
+        title: "The Psychopath Test",
+        author: "Jon Ronson",
+        img_url:
+          "https://images-eu.ssl-images-amazon.com/images/I/51ZGxfriOfL._SY291_BO1,204,203,200_QL40_ML2_.jpg",
+      },
+      {
+        title: "The Psychopath Test",
+        author: "Jon Ronson",
+        img_url:
+          "https://images-eu.ssl-images-amazon.com/images/I/51ZGxfriOfL._SY291_BO1,204,203,200_QL40_ML2_.jpg",
+      },
     ]);
   }, []);
 
@@ -48,6 +66,9 @@ const BookList = ({ navigation }) => {
       <Text>Hello from book list!</Text>
       <SafeAreaView style={styles.container}>
         <FlatList
+          horizontal
+          pagingEnabled={true}
+          showsHorizontalScrollIndicator={true}
           data={books}
           renderItem={renderItem}
           keyExtractor={(item) => item.img_url}
