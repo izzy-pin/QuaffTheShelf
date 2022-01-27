@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"
 import {
   Text,
   View,
   FlatList,
-  SafeAreaView,
   StyleSheet,
-  StatusBar,
   Image,
   Pressable,
 } from "react-native";
@@ -20,6 +18,9 @@ const BookList = ({ navigation }) => {
           onPress={() => {
             navigation.navigate("BookDetails");
           }}
+          onLongPress={() => {
+            alert("hurray! Deleted")
+          }}
         >
           <Text style={styles.title}>{title}</Text>
           <Image style={imageStyle} source={{ uri: img_url }} />
@@ -31,25 +32,25 @@ const BookList = ({ navigation }) => {
   useEffect(() => {
     setBooks([
       {
-        title: "The Psychopath Test",
+        title: "The Psychopath Test1",
         author: "Jon Ronson",
         img_url:
           "https://images-eu.ssl-images-amazon.com/images/I/51ZGxfriOfL._SY291_BO1,204,203,200_QL40_ML2_.jpg",
       },
       {
-        title: "The Psychopath Test",
+        title: "The Psychopath Test2",
         author: "Jon Ronson",
         img_url:
           "https://images-eu.ssl-images-amazon.com/images/I/51ZGxfriOfL._SY291_BO1,204,203,200_QL40_ML2_.jpg",
       },
       {
-        title: "The Psychopath Test",
+        title: "The Psychopath Test3",
         author: "Jon Ronson",
         img_url:
           "https://images-eu.ssl-images-amazon.com/images/I/51ZGxfriOfL._SY291_BO1,204,203,200_QL40_ML2_.jpg",
       },
       {
-        title: "The Psychopath Test",
+        title: "The Psychopath Test4",
         author: "Jon Ronson",
         img_url:
           "https://images-eu.ssl-images-amazon.com/images/I/51ZGxfriOfL._SY291_BO1,204,203,200_QL40_ML2_.jpg",
@@ -57,23 +58,22 @@ const BookList = ({ navigation }) => {
     ]);
   }, []);
 
-  const renderItem = ({ item }) => {
-    return <Item title={item.title} img_url={item.img_url} />;
-  };
+
 
   return (
     <View>
       <Text>Hello from book list!</Text>
-      <SafeAreaView style={styles.container}>
+      <View >
         <FlatList
+          
           horizontal
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}
           data={books}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.img_url}
+          renderItem={({ item }) => (<View><Item title={item.title} img_url={item.img_url} /></View>)}
+          keyExtractor={(item) => item.title}
         />
-      </SafeAreaView>
+      </View>
     </View>
   );
 };
@@ -81,10 +81,6 @@ const BookList = ({ navigation }) => {
 const imageStyle = { width: 300, height: 100, resizeMode: "contain" };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
   item: {
     marginHorizontal: 16,
     marginVertical: 8,
