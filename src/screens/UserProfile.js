@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Button } from "react-native";
+import { View, Text, Button, CheckBox } from "react-native";
 import { RadioButton } from "react-native-paper";
 //import { getAuth } from "firebase/auth";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
@@ -7,6 +7,9 @@ import app from "../../firebase-config";
 
 const UserProfile = () => {
   const [alcoholBool, setAlcoholBool] = useState(true);
+  const [alcoholPrefs, setAlcoholPrefs] = useState({ cocktails: false });
+  // const [noAlcoholPrefs, setNoAlcoholPrefs] = useState({});
+
   //   const auth = getAuth();
   //   const user = auth.currentUser;
   //  const email = user.email
@@ -24,6 +27,13 @@ const UserProfile = () => {
       console.log(err);
     }
   };
+
+  const handleAlcoholCheckBoxChange = (drinkType) => {
+    setAlcoholPrefs((currentPrefs) => {
+      return { ...currentPrefs, [drinkType]: !currentPrefs[drinkType] };
+    });
+  };
+
   return (
     <View>
       <Text>Tell us about yourself</Text>
@@ -45,6 +55,23 @@ const UserProfile = () => {
         />
         <Text>No thanks, I&apos;m teetotal</Text>
       </View>
+
+      {alcoholBool ? (
+        <View>
+          <View>
+            <CheckBox
+              value={alcoholPrefs.cocktails}
+              onValueChange={() => {
+                handleAlcoholCheckBoxChange("cocktails");
+              }}
+            />
+            <Text>Cocktails</Text>
+          </View>
+        </View>
+      ) : (
+        <View></View>
+      )}
+
       <Button onPress={handleSave}></Button>
       {/* <TextInput
         placeholder="Email"
