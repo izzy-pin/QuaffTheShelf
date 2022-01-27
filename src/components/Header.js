@@ -1,11 +1,16 @@
 import React from "react";
 import { View, Image, TouchableHighlight } from "react-native";
-import BurgerMenu from "./BurgerMenu";
 
 const Header = ({ navigation }) => {
   return (
     <View>
-      <BurgerMenu navigation={navigation} />
+      <TouchableHighlight
+        onPress={() => {
+          navigation.openDrawer();
+        }}
+      >
+        <Image source={require("../assets/hamburger.png")} style={imageStyle} />
+      </TouchableHighlight>
       <TouchableHighlight
         onPress={() => {
           navigation.navigate("Home");

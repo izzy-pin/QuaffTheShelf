@@ -1,6 +1,6 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 
 import Landing from "./src/screens/Landing";
 import Home from "./src/screens/Home";
@@ -12,24 +12,36 @@ import ClubList from "./src/screens/ClubList";
 import Header from "./src/components/Header";
 import JoinClub from "./src/screens/JoinClub";
 
-const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator
+      <Drawer.Navigator
         initialRouteName="Landing"
         screenOptions={{ header: (props) => <Header {...props} /> }}
       >
-        <Stack.Screen name="Landing" component={Landing} />
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="AddBook" component={AddBook} />
-        <Stack.Screen name="AddClub" component={AddClub} />
-        <Stack.Screen name="JoinClub" component={JoinClub} />
-        <Stack.Screen name="BookDetails" component={BookDetails} />
-        <Stack.Screen name="ClubDetails" component={ClubDetails} />
-        <Stack.Screen name="ClubList" component={ClubList} />
-      </Stack.Navigator>
+        <Drawer.Screen
+          options={{ drawerItemStyle: { display: "none" } }}
+          name="Landing"
+          component={Landing}
+        />
+        <Drawer.Screen name="Home" component={Home} />
+        <Drawer.Screen name="AddBook" component={AddBook} />
+        <Drawer.Screen name="AddClub" component={AddClub} />
+        <Drawer.Screen name="JoinClub" component={JoinClub} />
+        <Drawer.Screen
+          options={{ drawerItemStyle: { display: "none" } }}
+          name="BookDetails"
+          component={BookDetails}
+        />
+        <Drawer.Screen
+          options={{ drawerItemStyle: { display: "none" } }}
+          name="ClubDetails"
+          component={ClubDetails}
+        />
+        <Drawer.Screen name="ClubList" component={ClubList} />
+      </Drawer.Navigator>
     </NavigationContainer>
   );
 };
