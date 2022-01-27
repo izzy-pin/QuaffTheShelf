@@ -18,7 +18,8 @@
   },
   "plugins": ["react", "react-native"],
   "rules": {
-    "react/prop-types": ["warn", { "ignore": ["navigation"] }]
+    "react/prop-types": ["warn", { "ignore": ["navigation"] }],
+    "react/no-unused-vars": ["error", { "ignore": ["app"] }]
   },
   "settings": {
     "react": {

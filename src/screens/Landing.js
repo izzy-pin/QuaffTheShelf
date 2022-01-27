@@ -3,8 +3,6 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
 } from "firebase/auth";
 import {
   Text,
@@ -16,21 +14,10 @@ import {
 } from "react-native";
 import { useState } from "react";
 import app from "../../firebase-config";
-app; //<- added to pass linting!!
 
 const Landing = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [signedIn, setSignedIn] = useState();
-  const auth = getAuth();
-
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      setSignedIn(true);
-    } else {
-      setSignedIn(false);
-    }
-  });
 
   const handleCreateAccount = () => {
     const auth = getAuth();
@@ -38,7 +25,7 @@ const Landing = ({ navigation }) => {
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log(user);
-        navigation.navigate("Home"); //will changing to create account page
+        navigation.navigate("Home"); //will need changing to create account page
       })
       .catch((err) => {
         switch (err.code) {
@@ -65,7 +52,6 @@ const Landing = ({ navigation }) => {
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log(user);
-        setSignedIn(true);
         navigation.navigate("Home");
       })
       .catch((err) => {
@@ -87,19 +73,6 @@ const Landing = ({ navigation }) => {
         }
       });
   };
-  const handleLogOut = () => {
-    const auth = getAuth();
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        setSignedIn(false);
-        signOut(auth)
-          .then(() => {})
-          .catch((err) => {
-            console.log(err);
-          });
-      }
-    });
-  };
   return (
     <ScrollView>
       <KeyboardAvoidingView behavior="position">
@@ -117,15 +90,9 @@ const Landing = ({ navigation }) => {
           ></TextInput>
         </View>
         <View>
-          {signedIn === true ? (
-            <TouchableOpacity onPress={handleLogOut}>
-              <Text>Log Out</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity onPress={handleLogIn}>
-              <Text>Log In</Text>
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity onPress={handleLogIn}>
+            <Text>Log In</Text>
+          </TouchableOpacity>
           <TouchableOpacity onPress={handleCreateAccount}>
             <Text>Create Account</Text>
           </TouchableOpacity>
