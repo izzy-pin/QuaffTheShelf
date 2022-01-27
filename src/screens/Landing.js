@@ -6,7 +6,14 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { Text, View, TextInput, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  ScrollView,
+} from "react-native";
 import { useState } from "react";
 import app from "../../firebase-config";
 app; //<- added to pass linting!!
@@ -30,10 +37,26 @@ const Landing = ({ navigation }) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        console.log("created user", user.email);
+        console.log(user);
+        navigation.navigate("Home"); //will changing to create account page
       })
       .catch((err) => {
-        console.log(err.message);
+        switch (err.code) {
+          case "auth/invalid-email":
+            alert("You have entered an invalid email.");
+            break;
+          case "auth/email-already-in-use":
+            alert("User login already exists. Try user login instead.");
+            break;
+          case "auth/weak-password":
+            alert("Password should be at least six characters.");
+            break;
+          default:
+            alert(
+              "Create account error. Please enter a valid email address and password."
+            );
+            break;
+        }
       });
   };
   const handleLogIn = () => {
@@ -41,22 +64,27 @@ const Landing = ({ navigation }) => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        console.log("logged in user", user.email);
+        console.log(user);
         setSignedIn(true);
         navigation.navigate("Home");
       })
       .catch((err) => {
         switch (err.code) {
           case "auth/invalid-email":
-            alert("You have entered an invalid email");
+            alert("You have entered an invalid email.");
+            break;
+          case "auth/user-not-found":
+            alert("User not found. Please retry or create an account.");
+            break;
+          case "auth/wrong-password":
+            alert("Password does not match email address.");
             break;
           default:
-            alert("Ooops I did it again!");
+            alert(
+              "Login error. Please enter a valid email address and password."
+            );
             break;
         }
-
-        console.dir(err);
-        console.log(err.message);
       });
   };
   const handleLogOut = () => {
@@ -73,34 +101,37 @@ const Landing = ({ navigation }) => {
     });
   };
   return (
-    <View>
-      <View>
-        <TextInput
-          placeholder="Email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-        ></TextInput>
-        <TextInput
-          placeholder="Password"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-        ></TextInput>
-      </View>
-      <View>
-        {signedIn === true ? (
-          <TouchableOpacity onPress={handleLogOut}>
-            <Text>Log Out</Text>
+    <ScrollView>
+      <KeyboardAvoidingView behavior="position">
+        <View>
+          <TextInput
+            placeholder="Email"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+          ></TextInput>
+          <TextInput
+            placeholder="Password"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            secureTextEntry={true}
+          ></TextInput>
+        </View>
+        <View>
+          {signedIn === true ? (
+            <TouchableOpacity onPress={handleLogOut}>
+              <Text>Log Out</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={handleLogIn}>
+              <Text>Log In</Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity onPress={handleCreateAccount}>
+            <Text>Create Account</Text>
           </TouchableOpacity>
-        ) : (
-          <TouchableOpacity onPress={handleLogIn}>
-            <Text>Log In</Text>
-          </TouchableOpacity>
-        )}
-        <TouchableOpacity onPress={handleCreateAccount}>
-          <Text>Create Account</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+        </View>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 
