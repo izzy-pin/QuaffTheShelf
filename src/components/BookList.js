@@ -30,7 +30,7 @@ const BookList = ({ navigation }) => {
   };
 
   useEffect(() => {
-    setBooks([
+     setBooks([
       {
         title: "The Psychopath Test1",
         author: "Jon Ronson",
@@ -64,15 +64,15 @@ const BookList = ({ navigation }) => {
     <View>
       <Text>Hello from book list!</Text>
       <View >
+        {books.length == 0 ? <Text>Nothing to see here!</Text> : 
         <FlatList
-          
           horizontal
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}
           data={books}
           renderItem={({ item }) => (<View><Item title={item.title} img_url={item.img_url} /></View>)}
           keyExtractor={(item) => item.title}
-        />
+        />}
       </View>
     </View>
   );
