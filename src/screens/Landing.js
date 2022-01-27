@@ -25,7 +25,7 @@ const Landing = ({ navigation }) => {
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log(user);
-        navigation.navigate("Home"); //will need changing to create account page
+        navigation.navigate("UserProfile");
       })
       .catch((err) => {
         switch (err.code) {
