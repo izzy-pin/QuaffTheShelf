@@ -1,7 +1,20 @@
 import React from "react";
-import { View, Image, TouchableHighlight } from "react-native";
+import {
+  View,
+  Image,
+  TouchableHighlight,
+  Text,
+  TouchableOpacity,
+} from "react-native";
+import { getAuth, signOut } from "@firebase/auth";
 
 const Header = ({ navigation }) => {
+  const handleLogOut = () => {
+    const auth = getAuth();
+    signOut(auth).then(() => {
+      navigation.navigate("Landing");
+    });
+  };
   return (
     <View>
       <TouchableHighlight
@@ -18,6 +31,9 @@ const Header = ({ navigation }) => {
       >
         <Image source={require("../assets/logo.png")} style={imageStyle} />
       </TouchableHighlight>
+      <TouchableOpacity onPress={handleLogOut}>
+        <Text>Log Out</Text>
+      </TouchableOpacity>
     </View>
   );
 };
