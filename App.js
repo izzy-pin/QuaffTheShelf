@@ -11,6 +11,7 @@ import ClubDetails from "./src/screens/ClubDetails";
 import ClubList from "./src/screens/ClubList";
 import Header from "./src/components/Header";
 import JoinClub from "./src/screens/JoinClub";
+import UserProfile from "./src/screens/UserProfile";
 
 const Drawer = createDrawerNavigator();
 
@@ -41,6 +42,7 @@ const App = () => {
           component={ClubDetails}
         />
         <Drawer.Screen name="ClubList" component={ClubList} />
+        <Drawer.Screen name="UserProfile" component={UserProfile} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
