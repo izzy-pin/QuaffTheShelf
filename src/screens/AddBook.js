@@ -1,8 +1,8 @@
 import React from "react";
 import Barcode from "../components/BookScanner";
 
-const AddBook = () => {
-  return <Barcode/>;
+const AddBook = ({ navigation }) => {
+  return <Barcode navigation={navigation} />;
 };
 
 export default AddBook;

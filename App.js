@@ -27,7 +27,11 @@ const App = () => {
           component={Landing}
         />
         <Drawer.Screen name="Home" component={Home} />
-        <Drawer.Screen name="AddBook" component={AddBook} />
+        <Drawer.Screen
+          name="AddBook"
+          component={AddBook}
+          options={{ unmountOnBlur: true }}
+        />
         <Drawer.Screen name="AddClub" component={AddClub} />
         <Drawer.Screen name="JoinClub" component={JoinClub} />
         <Drawer.Screen

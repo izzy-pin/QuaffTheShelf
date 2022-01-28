@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import { StyleSheet, Text, View, Button, TextInput } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import axios from "axios";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
@@ -7,9 +7,10 @@ import app from "../../firebase-config";
 
 const firestore = getFirestore();
 
-const Barcode = () => {
+const Barcode = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const [number, setNumber] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -20,7 +21,11 @@ const Barcode = () => {
 
   const handleBarCodeScanned = ({ data }) => {
     setScanned(true);
-    const bookAddress = `http://openlibrary.org/api/volumes/brief/isbn/${data}.json`;
+    let bookAddress = "";
+    number
+      ? (bookAddress = `http://openlibrary.org/api/volumes/brief/isbn/${number}.json`)
+      : (bookAddress = `http://openlibrary.org/api/volumes/brief/isbn/${data}.json`);
+
     alert(`please navigate to ${bookAddress}`);
 
     // make an api call
@@ -30,7 +35,8 @@ const Barcode = () => {
           bookDetails.data.records[Object.keys(bookDetails.data.records)[0]];
 
         //isbn
-        const bookISBN = dataID.details.bib_key;
+        const bookFullISBN = dataID.details.bib_key;
+        const bookISBN = bookFullISBN.slice(5);
         console.log("the isbn is", bookISBN);
 
         //author
@@ -42,17 +48,17 @@ const Barcode = () => {
         console.log("title is", bookTitle);
 
         //subtitle
-        let bookSubTitle = ""
+        let bookSubTitle = "";
         if (dataID.data.subtitle) {
           bookSubTitle = dataID.data.subtitle;
           console.log(bookSubTitle);
         } else {
-            bookSubTitle = "No Subtitle found";
+          bookSubTitle = "No Subtitle found";
           console.log("no subtitle");
         }
 
         // cover
-        let bookCover = ""
+        let bookCover = "";
         if (dataID.data.cover) {
           bookCover = dataID.data.cover.medium;
           console.log("the cover url is ", bookCover);
@@ -83,7 +89,25 @@ const Barcode = () => {
   }
 
   if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
+    console.log(number);
+    return (
+      <View>
+        <TextInput
+          onChangeText={setNumber}
+          value={number}
+          placeholder="enter ISBN"
+          keyboardType="numeric"
+          onSubmitEditing={handleBarCodeScanned}
+        />
+        <Button
+          onPress={() => {
+            alert("button pressed");
+            navigation.navigate("Home");
+          }}
+          title="Back"
+        />
+      </View>
+    );
   }
 
   return (
@@ -95,13 +119,20 @@ const Barcode = () => {
       {scanned && (
         <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
       )}
+      <Button
+        onPress={() => {
+          alert("button pressed");
+          navigation.navigate("Home");
+        }}
+        title="Back"
+      />
     </View>
   );
 };
-export default Barcode;
 
 const scannerStyle = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 2,
   },
 });
+export default Barcode;
