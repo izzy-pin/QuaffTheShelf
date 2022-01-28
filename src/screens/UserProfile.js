@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,12 +11,15 @@ import Checkbox from "expo-checkbox";
 import { RadioButton, TextInput } from "react-native-paper";
 import { getAuth } from "firebase/auth";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
+
 import app from "../../firebase-config";
+import { readUser } from "../utils/firebase-funcs";
 
 const UserProfile = () => {
   const [imgUrl, setImgUrl] = useState("");
   const [isError, setIsError] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [isReadError, setIsReadError] = useState(false);
 
   const [alcoholBool, setAlcoholBool] = useState(true);
   const [alcoholPrefs, setAlcoholPrefs] = useState({
@@ -41,15 +44,36 @@ const UserProfile = () => {
   const auth = getAuth();
   const user = auth.currentUser;
   const email = user.email;
-
   const firestore = getFirestore();
+  const docRef = doc(firestore, `users/${email}`);
+
+  useEffect(() => {
+    setIsSaved(false);
+    setIsReadError(false);
+
+    readUser(docRef)
+      .then((userPrefs) => {
+        if (userPrefs) {
+          setAlcoholBool(userPrefs.alcoholBool);
+          setImgUrl(userPrefs.imgUrl);
+
+          if (userPrefs.alcoholBool === true) {
+            setAlcoholPrefs(userPrefs.drinksPrefs);
+          } else {
+            setNoAlcoholPrefs(userPrefs.drinksPrefs);
+          }
+        }
+      })
+      .catch(() => {
+        setIsReadError(true);
+      });
+  }, []);
 
   const handleSave = async () => {
-    const docRef = doc(firestore, `users/${email}`);
-
     const drinksPrefs = alcoholBool === true ? alcoholPrefs : noAlcoholPrefs;
     setIsError(false);
     setIsSaved(false);
+
     try {
       await setDoc(docRef, {
         imgUrl,
@@ -248,6 +272,12 @@ const UserProfile = () => {
             </Text>
           ) : null}
           {isSaved ? <Text>Preferences saved successfully!</Text> : null}
+          {isReadError ? (
+            <Text>
+              Sorry, there was a problem retrieving your preferences. Please try
+              again later.
+            </Text>
+          ) : null}
         </View>
       </KeyboardAvoidingView>
     </ScrollView>
