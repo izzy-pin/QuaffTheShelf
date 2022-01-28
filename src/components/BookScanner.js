@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import axios from "axios";
+import { doc, getFirestore, setDoc } from "firebase/firestore";
+import app from "../../firebase-config";
+
+const firestore = getFirestore();
 
 const Barcode = () => {
   const [hasPermission, setHasPermission] = useState(null);
@@ -20,39 +24,58 @@ const Barcode = () => {
     alert(`please navigate to ${bookAddress}`);
 
     // make an api call
-    axios({ method: "get", url: bookAddress }).then((bookDetails) => {
-      const dataID =
-        bookDetails.data.records[Object.keys(bookDetails.data.records)[0]];
+    axios({ method: "get", url: bookAddress })
+      .then((bookDetails) => {
+        const dataID =
+          bookDetails.data.records[Object.keys(bookDetails.data.records)[0]];
 
-      //isbn
-      const bookISBN = dataID.details.bib_key;
-      console.log("the isbn is", bookISBN);
+        //isbn
+        const bookISBN = dataID.details.bib_key;
+        console.log("the isbn is", bookISBN);
 
-      //author
-      const bookAuthor = dataID.data.authors[0].name;
-      console.log("authors name is ", bookAuthor);
+        //author
+        const bookAuthor = dataID.data.authors[0].name;
+        console.log("authors name is ", bookAuthor);
 
-      //title
-      const bookTitle = dataID.data.title;
-      console.log("title is", bookTitle);
+        //title
+        const bookTitle = dataID.data.title;
+        console.log("title is", bookTitle);
 
-      //subtitle
-      if (dataID.data.subtitle) {
-        const bookSubTitle = dataID.data.subtitle;
-        console.log(bookSubTitle);
-      } else {
-        console.log("no subtitle");
-      }
+        //subtitle
+        let bookSubTitle = ""
+        if (dataID.data.subtitle) {
+          bookSubTitle = dataID.data.subtitle;
+          console.log(bookSubTitle);
+        } else {
+            bookSubTitle = "No Subtitle found";
+          console.log("no subtitle");
+        }
 
-      // cover
-      if (dataID.data.cover) {
-        const coverURL = dataID.data.cover.medium;
-        console.log("the cover url is ", coverURL);
-      } else {
-        const coverURL = "No image found";
-        console.log(coverURL);
-      }
-    });
+        // cover
+        let bookCover = ""
+        if (dataID.data.cover) {
+          bookCover = dataID.data.cover.medium;
+          console.log("the cover url is ", bookCover);
+        } else {
+          bookCover = "No image found";
+          console.log(bookCover);
+        }
+
+        return { bookTitle, bookSubTitle, bookAuthor, bookCover, bookISBN };
+      })
+      .then((scannedBook) => {
+        const { bookTitle, bookSubTitle, bookAuthor, bookCover, bookISBN } =
+          scannedBook;
+        const docRef = doc(firestore, `books/${bookISBN}`);
+        setDoc(docRef, {
+          bookTitle,
+          bookSubTitle,
+          bookAuthor,
+          bookCover,
+        }).catch((error) => {
+          console.log(error);
+        });
+      });
   };
 
   if (hasPermission === null) {
