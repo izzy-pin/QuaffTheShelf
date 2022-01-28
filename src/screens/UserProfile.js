@@ -16,6 +16,8 @@ import app from "../../firebase-config";
 const UserProfile = () => {
   const [imgUrl, setImgUrl] = useState("");
   const [isError, setIsError] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+
   const [alcoholBool, setAlcoholBool] = useState(true);
   const [alcoholPrefs, setAlcoholPrefs] = useState({
     cocktails: false,
@@ -47,24 +49,29 @@ const UserProfile = () => {
 
     const drinksPrefs = alcoholBool === true ? alcoholPrefs : noAlcoholPrefs;
     setIsError(false);
+    setIsSaved(false);
     try {
       await setDoc(docRef, {
         imgUrl,
         alcoholBool,
         drinksPrefs,
       });
+      setIsSaved(true);
     } catch (err) {
       setIsError(true);
+      setIsSaved(false);
     }
   };
 
   const handleAlcoholCheckBoxChange = (drinkType) => {
+    setIsSaved(false);
     setAlcoholPrefs((currentPrefs) => {
       return { ...currentPrefs, [drinkType]: !currentPrefs[drinkType] };
     });
   };
 
   const handleNoAlcoholCheckBoxChange = (drinkType) => {
+    setIsSaved(false);
     setNoAlcoholPrefs((currentPrefs) => {
       return { ...currentPrefs, [drinkType]: !currentPrefs[drinkType] };
     });
@@ -77,7 +84,7 @@ const UserProfile = () => {
           <Text>Tell us about yourself</Text>
           <Text>{email}</Text>
           <TextInput
-            placeholder="Image URL"
+            placeholder="Please enter profile picture URL..."
             value={imgUrl}
             onChangeText={(text) => setImgUrl(text)}
           ></TextInput>
@@ -240,6 +247,7 @@ const UserProfile = () => {
               retry.
             </Text>
           ) : null}
+          {isSaved ? <Text>Preferences saved successfully!</Text> : null}
         </View>
       </KeyboardAvoidingView>
     </ScrollView>
