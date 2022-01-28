@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
-
+import axios from "axios";
 
 const Barcode = () => {
   const [hasPermission, setHasPermission] = useState(null);
@@ -14,13 +14,45 @@ const Barcode = () => {
     })();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = ({ data }) => {
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    
-    // make an api call
+    const bookAddress = `http://openlibrary.org/api/volumes/brief/isbn/${data}.json`;
+    alert(`please navigate to ${bookAddress}`);
 
-    // add book to user library
+    // make an api call
+    axios({ method: "get", url: bookAddress }).then((bookDetails) => {
+      const dataID =
+        bookDetails.data.records[Object.keys(bookDetails.data.records)[0]];
+
+      //isbn
+      const bookISBN = dataID.details.bib_key;
+      console.log("the isbn is", bookISBN);
+
+      //author
+      const bookAuthor = dataID.data.authors[0].name;
+      console.log("authors name is ", bookAuthor);
+
+      //title
+      const bookTitle = dataID.data.title;
+      console.log("title is", bookTitle);
+
+      //subtitle
+      if (dataID.data.subtitle) {
+        const bookSubTitle = dataID.data.subtitle;
+        console.log(bookSubTitle);
+      } else {
+        console.log("no subtitle");
+      }
+
+      // cover
+      if (dataID.data.cover) {
+        const coverURL = dataID.data.cover.medium;
+        console.log("the cover url is ", coverURL);
+      } else {
+        const coverURL = "No image found";
+        console.log(coverURL);
+      }
+    });
   };
 
   if (hasPermission === null) {
@@ -46,14 +78,7 @@ const Barcode = () => {
 export default Barcode;
 
 const scannerStyle = StyleSheet.create({
-    container: {
-      flex: 1,
-    },
-  });
-
-
-
-
-
-
-
+  container: {
+    flex: 1,
+  },
+});
