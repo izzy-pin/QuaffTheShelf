@@ -36,7 +36,8 @@ const UserProfile = ({ navigation }) => {
     alcoholFreeWine: false,
   };
   const [imgUrl, setImgUrl] = useState("");
-
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [isError, setIsError] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [isReadError, setIsReadError] = useState(false);
@@ -57,7 +58,7 @@ const UserProfile = ({ navigation }) => {
   const auth = getAuth();
   const user = auth.currentUser;
   const email = user.email;
-
+  let displayName = user.email;
   const firestore = getFirestore();
   const docRef = doc(firestore, `users/${email}`);
 
@@ -70,7 +71,9 @@ const UserProfile = ({ navigation }) => {
         if (userPrefs) {
           setAlcoholBool(userPrefs.alcoholBool);
           setDrinksBoth(userPrefs.drinksBoth);
-
+          setFirstName(userPrefs.firstName);
+          displayName = userPrefs.firstName;
+          setLastName(userPrefs.lastName);
           setImgUrl(userPrefs.imgUrl);
           setAlcoholPrefs(userPrefs.drinksPrefs.alcoholPrefs);
           setNoAlcoholPrefs(userPrefs.drinksPrefs.noAlcoholPrefs);
@@ -124,7 +127,7 @@ const UserProfile = ({ navigation }) => {
     try {
       await setDoc(
         docRef,
-        { imgUrl, alcoholBool, drinksPrefs, drinksBoth },
+        { firstName, lastName, imgUrl, alcoholBool, drinksPrefs, drinksBoth },
         { merge: true }
       );
       setIsSaved(true);
@@ -137,9 +140,25 @@ const UserProfile = ({ navigation }) => {
   return (
     <ScrollView>
       <KeyboardAvoidingView behavior="position" style={styles.content}>
-        <Text style={styles.greetingText}>Tell us about yourself, {email}</Text>
+        <Text style={styles.greetingText}>
+          Tell us about yourself, {displayName}
+        </Text>
 
         <View style={styles.textInputContainer}>
+          <View style={styles.namesContainer}>
+            <TextInput
+              placeholder="First name"
+              value={firstName}
+              onChangeText={(text) => setFirstName(text)}
+              style={[styles.textInput, styles.nameInput]}
+            ></TextInput>
+            <TextInput
+              placeholder="Last name"
+              value={lastName}
+              onChangeText={(text) => setLastName(text)}
+              style={[styles.textInput, styles.nameInput]}
+            ></TextInput>
+          </View>
           <TextInput
             placeholder="Profile picture URL..."
             value={imgUrl}
@@ -353,6 +372,14 @@ const styles = StyleSheet.create({
   greetingText: {
     fontSize: 18,
     paddingLeft: 5,
+  },
+  nameInput: {
+    width: "47%",
+  },
+  namesContainer: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   optionsText: {
     fontSize: 15,
