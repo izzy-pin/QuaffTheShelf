@@ -2,27 +2,21 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
-  Button,
+  TextInput,
   StyleSheet,
   KeyboardAvoidingView,
   ScrollView,
+  Pressable,
 } from "react-native";
-import Checkbox from "expo-checkbox";
-import { RadioButton, TextInput } from "react-native-paper";
+import { RadioButton } from "react-native-paper";
 import { getAuth } from "firebase/auth";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
-
 import app from "../../firebase-config";
 import { readUser } from "../utils/firebase-funcs";
+import UserDrinksChoices from "../components/UserDrinksChoices";
 
-const UserProfile = () => {
-  const [imgUrl, setImgUrl] = useState("");
-  const [isError, setIsError] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
-  const [isReadError, setIsReadError] = useState(false);
-
-  const [alcoholBool, setAlcoholBool] = useState(true);
-  const [alcoholPrefs, setAlcoholPrefs] = useState({
+const UserProfile = ({ navigation }) => {
+  const alcoholAllFalse = {
     cocktails: false,
     redWine: false,
     whiteWine: false,
@@ -31,19 +25,39 @@ const UserProfile = () => {
     ale: false,
     whiskey: false,
     gin: false,
-  });
-  const [noAlcoholPrefs, setNoAlcoholPrefs] = useState({
+  };
+
+  const noAlcoholAllFalse = {
     mocktails: false,
     softDrinks: false,
     tea: false,
     coffee: false,
     alcoholFreeBeer: false,
     alcoholFreeWine: false,
-  });
+  };
+  const [imgUrl, setImgUrl] = useState("");
+
+  const [isError, setIsError] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const [isReadError, setIsReadError] = useState(false);
+
+  const [alcoholBool, setAlcoholBool] = useState(true);
+  const [drinksBoth, setDrinksBoth] = useState(false);
+
+  const [alcoholPrefs, setAlcoholPrefs] = useState(alcoholAllFalse);
+  const alcoholOptions = Object.keys(alcoholAllFalse).sort((a, b) =>
+    a.localeCompare(b)
+  );
+
+  const [noAlcoholPrefs, setNoAlcoholPrefs] = useState(noAlcoholAllFalse);
+  const noAlcoholOptions = Object.keys(noAlcoholAllFalse).sort((a, b) =>
+    a.localeCompare(b)
+  );
 
   const auth = getAuth();
   const user = auth.currentUser;
   const email = user.email;
+
   const firestore = getFirestore();
   const docRef = doc(firestore, `users/${email}`);
 
@@ -55,13 +69,11 @@ const UserProfile = () => {
       .then((userPrefs) => {
         if (userPrefs) {
           setAlcoholBool(userPrefs.alcoholBool);
-          setImgUrl(userPrefs.imgUrl);
+          setDrinksBoth(userPrefs.drinksBoth);
 
-          if (userPrefs.alcoholBool === true) {
-            setAlcoholPrefs(userPrefs.drinksPrefs);
-          } else {
-            setNoAlcoholPrefs(userPrefs.drinksPrefs);
-          }
+          setImgUrl(userPrefs.imgUrl);
+          setAlcoholPrefs(userPrefs.drinksPrefs.alcoholPrefs);
+          setNoAlcoholPrefs(userPrefs.drinksPrefs.noAlcoholPrefs);
         }
       })
       .catch(() => {
@@ -69,17 +81,52 @@ const UserProfile = () => {
       });
   }, []);
 
+  const alcoholRadio = () => {
+    setAlcoholBool(true);
+    setDrinksBoth(false);
+  };
+
+  const noAlcoholRadio = () => {
+    setAlcoholBool(false);
+    setDrinksBoth(false);
+  };
+
+  const bothRadio = () => {
+    setAlcoholBool(true);
+    setDrinksBoth(true);
+  };
+
   const handleSave = async () => {
-    const drinksPrefs = alcoholBool === true ? alcoholPrefs : noAlcoholPrefs;
+    let drinksPrefs;
+    if (drinksBoth) {
+      drinksPrefs = { alcoholPrefs, noAlcoholPrefs };
+    } else if (alcoholBool) {
+      drinksPrefs = {
+        alcoholPrefs,
+        noAlcoholPrefs: {
+          ...noAlcoholAllFalse,
+        },
+      };
+      setNoAlcoholPrefs(noAlcoholAllFalse);
+    } else {
+      drinksPrefs = {
+        alcoholPrefs: {
+          ...alcoholAllFalse,
+        },
+        noAlcoholPrefs,
+      };
+      setAlcoholPrefs(alcoholAllFalse);
+    }
+
     setIsError(false);
     setIsSaved(false);
 
     try {
-      await setDoc(docRef, {
-        imgUrl,
-        alcoholBool,
-        drinksPrefs,
-      });
+      await setDoc(
+        docRef,
+        { imgUrl, alcoholBool, drinksPrefs, drinksBoth },
+        { merge: true }
+      );
       setIsSaved(true);
     } catch (err) {
       setIsError(true);
@@ -87,205 +134,291 @@ const UserProfile = () => {
     }
   };
 
-  const handleAlcoholCheckBoxChange = (drinkType) => {
-    setIsSaved(false);
-    setAlcoholPrefs((currentPrefs) => {
-      return { ...currentPrefs, [drinkType]: !currentPrefs[drinkType] };
-    });
-  };
-
-  const handleNoAlcoholCheckBoxChange = (drinkType) => {
-    setIsSaved(false);
-    setNoAlcoholPrefs((currentPrefs) => {
-      return { ...currentPrefs, [drinkType]: !currentPrefs[drinkType] };
-    });
-  };
-
   return (
     <ScrollView>
-      <KeyboardAvoidingView behavior="position">
-        <View>
-          <Text>Tell us about yourself</Text>
-          <Text>{email}</Text>
+      <KeyboardAvoidingView behavior="position" style={styles.content}>
+        <Text style={styles.greetingText}>Tell us about yourself, {email}</Text>
+
+        <View style={styles.textInputContainer}>
           <TextInput
-            placeholder="Please enter profile picture URL..."
+            placeholder="Profile picture URL..."
             value={imgUrl}
             onChangeText={(text) => setImgUrl(text)}
+            style={styles.textInput}
           ></TextInput>
-          <Text>Would you like alcoholic or nonalcoholic suggestions?</Text>
-          <View style={styles.radioStyle}>
-            <RadioButton
-              value="alcohol"
-              status={alcoholBool === true ? "checked" : "unchecked"}
-              onPress={() => setAlcoholBool(true)}
-            />
-            <Text>Yes please to alcoholic drinks</Text>
-          </View>
-          <View style={styles.radioStyle}>
-            <RadioButton
-              value="no alcohol"
-              status={alcoholBool === false ? "checked" : "unchecked"}
-              onPress={() => setAlcoholBool(false)}
-            />
-            <Text>No thanks, I&apos;m teetotal</Text>
-          </View>
-
-          {alcoholBool ? (
-            <View>
-              <View style={styles.checkboxStyle}>
-                <Checkbox
-                  value={alcoholPrefs.cocktails}
-                  onValueChange={() => {
-                    handleAlcoholCheckBoxChange("cocktails");
-                  }}
-                />
-                <Text>Cocktails</Text>
-              </View>
-              <View style={styles.checkboxStyle}>
-                <Checkbox
-                  value={alcoholPrefs.redWine}
-                  onValueChange={() => {
-                    handleAlcoholCheckBoxChange("redWine");
-                  }}
-                />
-                <Text>Red Wine</Text>
-              </View>
-              <View style={styles.checkboxStyle}>
-                <Checkbox
-                  value={alcoholPrefs.whiteWine}
-                  onValueChange={() => {
-                    handleAlcoholCheckBoxChange("whiteWine");
-                  }}
-                />
-                <Text>White Wine</Text>
-              </View>
-              <View style={styles.checkboxStyle}>
-                <Checkbox
-                  value={alcoholPrefs.roseWine}
-                  onValueChange={() => {
-                    handleAlcoholCheckBoxChange("roseWine");
-                  }}
-                />
-                <Text>Rose Wine</Text>
-              </View>
-              <View style={styles.checkboxStyle}>
-                <Checkbox
-                  value={alcoholPrefs.lager}
-                  onValueChange={() => {
-                    handleAlcoholCheckBoxChange("lager");
-                  }}
-                />
-                <Text>Lager</Text>
-              </View>
-              <View style={styles.checkboxStyle}>
-                <Checkbox
-                  value={alcoholPrefs.ale}
-                  onValueChange={() => {
-                    handleAlcoholCheckBoxChange("ale");
-                  }}
-                />
-                <Text>Ale</Text>
-              </View>
-              <View style={styles.checkboxStyle}>
-                <Checkbox
-                  value={alcoholPrefs.whiskey}
-                  onValueChange={() => {
-                    handleAlcoholCheckBoxChange("whiskey");
-                  }}
-                />
-                <Text>Whiskey</Text>
-              </View>
-              <View style={styles.checkboxStyle}>
-                <Checkbox
-                  value={alcoholPrefs.gin}
-                  onValueChange={() => {
-                    handleAlcoholCheckBoxChange("gin");
-                  }}
-                />
-                <Text>Gin</Text>
-              </View>
-            </View>
-          ) : (
-            <View>
-              <View style={styles.checkboxStyle}>
-                <Checkbox
-                  value={noAlcoholPrefs.mocktails}
-                  onValueChange={() => {
-                    handleNoAlcoholCheckBoxChange("mocktails");
-                  }}
-                />
-                <Text>Mocktails</Text>
-              </View>
-              <View style={styles.checkboxStyle}>
-                <Checkbox
-                  value={noAlcoholPrefs.softDrinks}
-                  onValueChange={() => {
-                    handleNoAlcoholCheckBoxChange("softDrinks");
-                  }}
-                />
-                <Text>Soft Drinks</Text>
-              </View>
-              <View style={styles.checkboxStyle}>
-                <Checkbox
-                  value={noAlcoholPrefs.tea}
-                  onValueChange={() => {
-                    handleNoAlcoholCheckBoxChange("tea");
-                  }}
-                />
-                <Text>Tea</Text>
-              </View>
-              <View style={styles.checkboxStyle}>
-                <Checkbox
-                  value={noAlcoholPrefs.coffee}
-                  onValueChange={() => {
-                    handleNoAlcoholCheckBoxChange("coffee");
-                  }}
-                />
-                <Text>Coffee</Text>
-              </View>
-              <View style={styles.checkboxStyle}>
-                <Checkbox
-                  value={noAlcoholPrefs.alcoholFreeBeer}
-                  onValueChange={() => {
-                    handleNoAlcoholCheckBoxChange("alcoholFreeBeer");
-                  }}
-                />
-                <Text>Alcohol Free Beer</Text>
-              </View>
-              <View style={styles.checkboxStyle}>
-                <Checkbox
-                  value={noAlcoholPrefs.alcoholFreeWine}
-                  onValueChange={() => {
-                    handleNoAlcoholCheckBoxChange("alcoholFreeWine");
-                  }}
-                />
-                <Text>Alcohol Free Wine</Text>
-              </View>
-            </View>
-          )}
-
-          <Button onPress={handleSave} title="Save"></Button>
-          {isError ? (
-            <Text>
-              Sorry, there&apos;s been an error saving your preferences. Please
-              retry.
-            </Text>
-          ) : null}
-          {isSaved ? <Text>Preferences saved successfully!</Text> : null}
-          {isReadError ? (
-            <Text>
-              Sorry, there was a problem retrieving your preferences. Please try
-              again later.
-            </Text>
-          ) : null}
         </View>
       </KeyboardAvoidingView>
+
+      <Text style={styles.questionText}>
+        What kind of pairing suggestions would you like with your books?
+      </Text>
+      <Text style={styles.selectText}>Please select:</Text>
+      <View style={styles.radioQuestionsContainer}>
+        <Pressable
+          style={[
+            styles.radioContainer,
+            alcoholBool && !drinksBoth ? styles.radioContainerSelected : null,
+          ]}
+          onPress={alcoholRadio}
+        >
+          <RadioButton
+            value="alcohol"
+            color={white}
+            status={
+              drinksBoth ? "unchecked" : !alcoholBool ? "unchecked" : "checked"
+            }
+            onPress={alcoholRadio}
+          />
+          <Text
+            style={[
+              styles.radioText,
+              alcoholBool && !drinksBoth ? styles.radioTextSelected : null,
+            ]}
+          >
+            I&apos;d like alcoholic pairings
+          </Text>
+        </Pressable>
+
+        <Pressable
+          style={[
+            styles.radioContainer,
+            !alcoholBool ? styles.radioContainerSelected : null,
+          ]}
+          onPress={noAlcoholRadio}
+        >
+          <RadioButton
+            value="no alcohol"
+            color={white}
+            status={
+              drinksBoth ? "unchecked" : !alcoholBool ? "checked" : "unchecked"
+            }
+            onPress={noAlcoholRadio}
+          />
+          <Text
+            style={[
+              styles.radioText,
+              !alcoholBool ? styles.radioTextSelected : null,
+            ]}
+          >
+            I&apos;d prefer non-alcoholic pairings
+          </Text>
+        </Pressable>
+
+        <Pressable
+          style={[
+            styles.radioContainer,
+            drinksBoth ? styles.radioContainerSelected : null,
+          ]}
+          onPress={bothRadio}
+        >
+          <RadioButton
+            value="both"
+            color={white}
+            status={drinksBoth ? "checked" : "unchecked"}
+            onPress={bothRadio}
+          />
+          <Text
+            style={[
+              styles.radioText,
+              drinksBoth ? styles.radioTextSelected : null,
+            ]}
+          >
+            Best of both, alcoholic and non-alcoholic pairings
+          </Text>
+        </Pressable>
+      </View>
+
+      {drinksBoth ? (
+        <>
+          <View style={styles.alcoholPrefsContainer}>
+            <Text style={styles.optionsText}> Alcohol preferences:</Text>
+            {alcoholOptions.map((option, index) => {
+              return (
+                <UserDrinksChoices
+                  key={option + index}
+                  option={option}
+                  alcoholPrefs={alcoholPrefs}
+                  setAlcoholPrefs={setAlcoholPrefs}
+                  setIsSaved={setIsSaved}
+                />
+              );
+            })}
+          </View>
+          <View style={styles.alcoholPrefsContainer}>
+            <Text style={styles.optionsText}> Non-alcoholic preferences:</Text>
+            {noAlcoholOptions.map((option, index) => {
+              return (
+                <UserDrinksChoices
+                  key={option + index}
+                  option={option}
+                  noAlcoholPrefs={noAlcoholPrefs}
+                  setNoAlcoholPrefs={setNoAlcoholPrefs}
+                  setIsSaved={setIsSaved}
+                />
+              );
+            })}
+          </View>
+        </>
+      ) : alcoholBool ? (
+        <View style={styles.alcoholPrefsContainer}>
+          <Text style={styles.optionsText}> Alcoholic preferences:</Text>
+          {alcoholOptions.map((option, index) => {
+            return (
+              <UserDrinksChoices
+                key={option + index}
+                option={option}
+                alcoholPrefs={alcoholPrefs}
+                setAlcoholPrefs={setAlcoholPrefs}
+                setIsSaved={setIsSaved}
+              />
+            );
+          })}
+        </View>
+      ) : (
+        <View style={styles.alcoholPrefsContainer}>
+          <Text style={styles.optionsText}> Non-alcoholic preferences:</Text>
+          {noAlcoholOptions.map((option, index) => {
+            return (
+              <UserDrinksChoices
+                key={option + index}
+                option={option}
+                noAlcoholPrefs={noAlcoholPrefs}
+                setNoAlcoholPrefs={setNoAlcoholPrefs}
+                setIsSaved={setIsSaved}
+              />
+            );
+          })}
+        </View>
+      )}
+
+      <View style={styles.saveSection}>
+        {isError ? (
+          <Text>
+            Sorry, there&apos;s been an error saving your preferences. Please
+            retry.
+          </Text>
+        ) : null}
+        {isSaved ? (
+          <Text style={styles.saved}>Preferences saved successfully!</Text>
+        ) : null}
+        {isReadError ? (
+          <Text>
+            Sorry, there was a problem retrieving your preferences. Please try
+            again later.
+          </Text>
+        ) : null}
+        <View style={styles.saveButtonsContainer}>
+          <Pressable onPress={handleSave} style={styles.button}>
+            <Text style={styles.buttonText}>Save</Text>
+          </Pressable>
+          {isSaved ? (
+            <Pressable
+              onPress={() => navigation.navigate("Home")}
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>Home</Text>
+            </Pressable>
+          ) : null}
+        </View>
+      </View>
     </ScrollView>
   );
 };
 
+const wine = "#B43F5E";
+const white = "#FFFFFF";
+
 const styles = StyleSheet.create({
-  checkboxStyle: { alignItems: "center", flexDirection: "row" },
-  radioStyle: { alignItems: "center", flexDirection: "row" },
+  alcoholPrefsContainer: {
+    paddingLeft: 20,
+  },
+  button: {
+    alignItems: "center",
+    backgroundColor: wine,
+    borderRadius: 20,
+    margin: 5,
+    width: 90,
+  },
+  buttonText: {
+    color: white,
+    margin: 10,
+  },
+
+  content: {
+    alignItems: "center",
+    flex: 1,
+    justifyContent: "center",
+    marginTop: "10%",
+  },
+  greetingText: {
+    fontSize: 18,
+    paddingLeft: 5,
+  },
+  optionsText: {
+    fontSize: 15,
+    marginBottom: 10,
+    marginTop: 20,
+    textAlign: "center",
+  },
+  questionText: {
+    fontSize: 15,
+    paddingBottom: 5,
+    paddingHorizontal: 5,
+  },
+
+  radioContainer: {
+    alignItems: "center",
+    borderColor: wine,
+    borderRadius: 50,
+    borderWidth: 2,
+    flexDirection: "row",
+    margin: 8,
+    width: "77%",
+  },
+  radioContainerSelected: {
+    backgroundColor: wine,
+  },
+  radioQuestionsContainer: {
+    alignItems: "center",
+    marginHorizontal: 5,
+    marginVertical: 10,
+  },
+  radioText: {
+    paddingRight: 35,
+    paddingVertical: 10,
+  },
+  radioTextSelected: {
+    color: white,
+  },
+
+  saveButtonsContainer: {
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  saveSection: {
+    alignItems: "center",
+    margin: 10,
+  },
+  saved: {
+    fontSize: 15,
+    margin: 10,
+  },
+  selectText: {
+    fontSize: 15,
+    paddingLeft: 15,
+    paddingTop: 5,
+  },
+  textInput: {
+    borderColor: wine,
+    borderRadius: 10,
+    borderWidth: 2,
+    margin: 5,
+    padding: 10,
+  },
+  textInputContainer: {
+    display: "flex",
+    marginHorizontal: 5,
+    marginVertical: 20,
+  },
 });
 export default UserProfile;
