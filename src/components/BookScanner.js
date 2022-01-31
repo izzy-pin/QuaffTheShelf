@@ -18,6 +18,7 @@ const Barcode = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [number, setNumber] = useState(null);
+  const [isbn, setIsbn] = useState({});
   const auth = getAuth();
   const user = auth.currentUser;
   const email = user.email;
@@ -36,8 +37,7 @@ const Barcode = ({ navigation }) => {
       ? (bookAddress = `http://openlibrary.org/api/volumes/brief/isbn/${number}.json`)
       : (bookAddress = `http://openlibrary.org/api/volumes/brief/isbn/${data}.json`);
 
-    alert(`please navigate to ${bookAddress}`);
-
+    alert(`ISBN: ${number ? number : data} added to library`);
     // make an api call
     axios({ method: "get", url: bookAddress })
       .then((bookDetails) => {
@@ -47,6 +47,7 @@ const Barcode = ({ navigation }) => {
         //isbn
         const bookFullISBN = dataID.details.bib_key;
         const bookISBN = bookFullISBN.slice(5);
+        setIsbn({ isbn: bookISBN });
 
         //author
         const bookAuthor = dataID.data.authors[0].name;
@@ -128,7 +129,16 @@ const Barcode = ({ navigation }) => {
         style={StyleSheet.absoluteFillObject}
       />
       {scanned && (
-        <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
+        <View>
+          <Button
+            title={"Tap to Scan Again"}
+            onPress={() => setScanned(false)}
+          />
+          <Button
+            title="Continue to pairing"
+            onPress={() => navigation.navigate("BookDetails", isbn)}
+          />
+        </View>
       )}
       <Button
         onPress={() => {
