@@ -1,9 +1,8 @@
 import React from "react";
+import Barcode from "../components/BookScanner";
 
-import { Text } from "react-native";
-
-const AddBook = () => {
-  return <Text>Hello from AddBook...</Text>;
+const AddBook = ({ navigation }) => {
+  return <Barcode navigation={navigation} />;
 };
 
 export default AddBook;
