@@ -1,78 +1,33 @@
-// does this book have any pairings?
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+import app from "../../firebase-config";
 
-// if yes >>>
-    // create a votesObj with each drink from the votes on this book
-        // e.g {wine:1, beer:2, ale: 4}
-    
-    // filter this list based on user pref
 
-    // are there any drinks left in the votesObj?
-    
-    // if yes >>> 
-        // offer the pairing with the highest votes (if a tie, offer any of the highest)
+async function bookRecs(){
+    const firestore = getFirestore(); //connects to database
+    const bookISBN = "1505297400" //using a static ISBN currently, can be passed on props
+    const bookRef = doc(firestore, `books/${bookISBN}`); //get the document
+    const bookSnap = await getDoc(bookRef); // get document data
+    const bookVotes = bookSnap.data().drinkPairings //drills to vote data
 
-        // if accepted >>>
-            // add vote to book
+    let firstRec = "" 
+    let secondRec = ""
+    let userDrinkArray = []
 
-        // if declined >>>
-            // remove the offered drink from the votesObj
+    console.log(bookVotes)
 
-            // are there any drinks left in the votesObj?
-                //if yes >>>
-                    //offer the pairing with the highest votes (if a tie, offer any of the highest)
+    //create an object will all the drinks a user would drink
+        //eg drinksObj {beer:0 , wine:0 , ale:0}
 
-                    //if accepted >>>
-                        // add vote to book
+    //read though all the book pairing votes and incriment the values for each vote
+        // eg drinksObj {beer:1 , wine:0 , ale:1}
 
-                    //if declined >>>
-                        // ask user to select from a list of all drinks filted by users pref
+    //return the top 2 of the object
+        //eg firstRec="beer" secondRec="ale"
 
-                        // add vote to book
+    //if theres not enough return random ones
+      
+            
+    return {firstRec, secondRec, userDrinkArray}
+}
 
-                //if no >>>
-                        // get a list of all drinks
-
-                        // filter list to match user prefs
-
-                        // randomly select a drink from the filted list
-
-                        // offer this paring
-
-                        // if accepted >>> 
-                            //add vote to book
-
-                        // if declined >>>
-                            // ask user to select from a list of all drinks filted by users pref
-
-                            // add vote to book
-        
-
-    // if no >>>
-        // complete the "does this book have any pairing" >>> no code
-
-// if No >>>
-    // get a list of all drinks
-
-    // filter list to match user prefs
-
-    // randomly select a drink from the filted list
-
-    // offer this paring
-
-    // if accepted >>>
-        // add vote to book
-    
-    // if declined >>>
-        // remove surgested book from list
-
-        // randomly select a drink from the filted list
-
-        // offer this pairing
-
-        // if accepted >>>
-            // add vote to book
-
-        // if declined >>>
-            // ask user to select from a list of all drinks filted by users pref
-
-            // add vote to book
+export default bookRecs
