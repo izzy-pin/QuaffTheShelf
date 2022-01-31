@@ -58,7 +58,6 @@ const UserProfile = ({ navigation }) => {
   const auth = getAuth();
   const user = auth.currentUser;
   const email = user.email;
-  let displayName = user.email;
   const firestore = getFirestore();
   const docRef = doc(firestore, `users/${email}`);
 
@@ -72,7 +71,6 @@ const UserProfile = ({ navigation }) => {
           setAlcoholBool(userPrefs.alcoholBool);
           setDrinksBoth(userPrefs.drinksBoth);
           setFirstName(userPrefs.firstName);
-          displayName = userPrefs.firstName;
           setLastName(userPrefs.lastName);
           setImgUrl(userPrefs.imgUrl);
           setAlcoholPrefs(userPrefs.drinksPrefs.alcoholPrefs);
@@ -140,9 +138,7 @@ const UserProfile = ({ navigation }) => {
   return (
     <ScrollView>
       <KeyboardAvoidingView behavior="position" style={styles.content}>
-        <Text style={styles.greetingText}>
-          Tell us about yourself, {displayName}
-        </Text>
+        <Text style={styles.greetingText}>Tell us about yourself, {email}</Text>
 
         <View style={styles.textInputContainer}>
           <View style={styles.namesContainer}>
@@ -326,19 +322,19 @@ const UserProfile = ({ navigation }) => {
             again later.
           </Text>
         ) : null}
-        <View style={styles.saveButtonsContainer}>
+
+        {isSaved ? (
+          <Pressable
+            onPress={() => navigation.navigate("Home")}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Home</Text>
+          </Pressable>
+        ) : (
           <Pressable onPress={handleSave} style={styles.button}>
             <Text style={styles.buttonText}>Save</Text>
           </Pressable>
-          {isSaved ? (
-            <Pressable
-              onPress={() => navigation.navigate("Home")}
-              style={styles.button}
-            >
-              <Text style={styles.buttonText}>Home</Text>
-            </Pressable>
-          ) : null}
-        </View>
+        )}
       </View>
     </ScrollView>
   );
@@ -418,10 +414,6 @@ const styles = StyleSheet.create({
     color: white,
   },
 
-  saveButtonsContainer: {
-    alignItems: "center",
-    flexDirection: "row",
-  },
   saveSection: {
     alignItems: "center",
     margin: 10,
