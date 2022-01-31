@@ -176,6 +176,7 @@ const UserProfile = ({ navigation }) => {
             status={
               drinksBoth ? "unchecked" : !alcoholBool ? "unchecked" : "checked"
             }
+            onPress={alcoholRadio}
           />
           <Text style={styles.radioText}>I&apos;d like alcoholic pairings</Text>
         </Pressable>
