@@ -2,8 +2,15 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Button, TextInput } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import axios from "axios";
-import { doc, getFirestore, setDoc } from "firebase/firestore";
+import {
+  doc,
+  getFirestore,
+  setDoc,
+  arrayUnion,
+  updateDoc,
+} from "firebase/firestore";
 import app from "../../firebase-config";
+import { getAuth } from "firebase/auth";
 
 const firestore = getFirestore();
 
@@ -11,6 +18,9 @@ const Barcode = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [number, setNumber] = useState(null);
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const email = user.email;
 
   useEffect(() => {
     (async () => {
@@ -37,34 +47,27 @@ const Barcode = ({ navigation }) => {
         //isbn
         const bookFullISBN = dataID.details.bib_key;
         const bookISBN = bookFullISBN.slice(5);
-        console.log("the isbn is", bookISBN);
 
         //author
         const bookAuthor = dataID.data.authors[0].name;
-        console.log("authors name is ", bookAuthor);
 
         //title
         const bookTitle = dataID.data.title;
-        console.log("title is", bookTitle);
 
         //subtitle
         let bookSubTitle = "";
         if (dataID.data.subtitle) {
           bookSubTitle = dataID.data.subtitle;
-          console.log(bookSubTitle);
         } else {
           bookSubTitle = "No Subtitle found";
-          console.log("no subtitle");
         }
 
         // cover
         let bookCover = "";
         if (dataID.data.cover) {
           bookCover = dataID.data.cover.medium;
-          console.log("the cover url is ", bookCover);
         } else {
           bookCover = "No image found";
-          console.log(bookCover);
         }
 
         return { bookTitle, bookSubTitle, bookAuthor, bookCover, bookISBN };
@@ -73,14 +76,24 @@ const Barcode = ({ navigation }) => {
         const { bookTitle, bookSubTitle, bookAuthor, bookCover, bookISBN } =
           scannedBook;
         const docRef = doc(firestore, `books/${bookISBN}`);
-        setDoc(docRef, {
-          bookTitle,
-          bookSubTitle,
-          bookAuthor,
-          bookCover,
-        }).catch((error) => {
-          console.log(error);
-        });
+        setDoc(
+          docRef,
+          {
+            bookTitle,
+            bookSubTitle,
+            bookAuthor,
+            bookCover,
+          },
+          { merge: true }
+        );
+        return bookISBN;
+      })
+      .then((bookISBN) => {
+        const docRef = doc(firestore, `users/${email}`);
+        updateDoc(docRef, { bookLibrary: arrayUnion(bookISBN) });
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 
@@ -89,7 +102,6 @@ const Barcode = ({ navigation }) => {
   }
 
   if (hasPermission === false) {
-    console.log(number);
     return (
       <View>
         <TextInput
@@ -101,7 +113,6 @@ const Barcode = ({ navigation }) => {
         />
         <Button
           onPress={() => {
-            alert("button pressed");
             navigation.navigate("Home");
           }}
           title="Back"
@@ -121,7 +132,6 @@ const Barcode = ({ navigation }) => {
       )}
       <Button
         onPress={() => {
-          alert("button pressed");
           navigation.navigate("Home");
         }}
         title="Back"
