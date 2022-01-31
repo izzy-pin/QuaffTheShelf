@@ -169,75 +169,39 @@ const UserProfile = ({ navigation }) => {
       </Text>
       <Text style={styles.selectText}>Please select:</Text>
       <View style={styles.radioQuestionsContainer}>
-        <Pressable
-          style={[
-            styles.radioContainer,
-            alcoholBool && !drinksBoth ? styles.radioContainerSelected : null,
-          ]}
-          onPress={alcoholRadio}
-        >
+        <Pressable style={styles.radioContainer} onPress={alcoholRadio}>
           <RadioButton
             value="alcohol"
-            color={white}
+            color={wine}
             status={
               drinksBoth ? "unchecked" : !alcoholBool ? "unchecked" : "checked"
             }
-            onPress={alcoholRadio}
           />
-          <Text
-            style={[
-              styles.radioText,
-              alcoholBool && !drinksBoth ? styles.radioTextSelected : null,
-            ]}
-          >
-            I&apos;d like alcoholic pairings
-          </Text>
+          <Text style={styles.radioText}>I&apos;d like alcoholic pairings</Text>
         </Pressable>
 
-        <Pressable
-          style={[
-            styles.radioContainer,
-            !alcoholBool ? styles.radioContainerSelected : null,
-          ]}
-          onPress={noAlcoholRadio}
-        >
+        <Pressable style={styles.radioContainer} onPress={noAlcoholRadio}>
           <RadioButton
             value="no alcohol"
-            color={white}
+            color={wine}
             status={
               drinksBoth ? "unchecked" : !alcoholBool ? "checked" : "unchecked"
             }
             onPress={noAlcoholRadio}
           />
-          <Text
-            style={[
-              styles.radioText,
-              !alcoholBool ? styles.radioTextSelected : null,
-            ]}
-          >
+          <Text style={styles.radioText}>
             I&apos;d prefer non-alcoholic pairings
           </Text>
         </Pressable>
 
-        <Pressable
-          style={[
-            styles.radioContainer,
-            drinksBoth ? styles.radioContainerSelected : null,
-          ]}
-          onPress={bothRadio}
-        >
+        <Pressable style={styles.radioContainer} onPress={bothRadio}>
           <RadioButton
             value="both"
-            color={white}
+            color={wine}
             status={drinksBoth ? "checked" : "unchecked"}
             onPress={bothRadio}
           />
-          <Text
-            style={[
-              styles.radioText,
-              drinksBoth ? styles.radioTextSelected : null,
-            ]}
-          >
+          <Text style={styles.radioText}>
             Best of both, alcoholic and non-alcoholic pairings
           </Text>
         </Pressable>
@@ -398,9 +362,7 @@ const styles = StyleSheet.create({
     margin: 8,
     width: "77%",
   },
-  radioContainerSelected: {
-    backgroundColor: wine,
-  },
+
   radioQuestionsContainer: {
     alignItems: "center",
     marginHorizontal: 5,
@@ -409,9 +371,6 @@ const styles = StyleSheet.create({
   radioText: {
     paddingRight: 35,
     paddingVertical: 10,
-  },
-  radioTextSelected: {
-    color: white,
   },
 
   saveSection: {
