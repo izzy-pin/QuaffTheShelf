@@ -35,7 +35,7 @@ const Header = ({ navigation }) => {
             navigation.navigate("Home");
           }}
         >
-          <Image source={require("../assets/logo.png")} style={styles.image} />
+          <Image source={require("../assets/QTSLogoTextless.png")} style={styles.image} />
         </TouchableHighlight>
         <TouchableOpacity onPress={handleLogOut}>
           <Text style={styles.logOutText}>Log Out</Text>
