@@ -78,7 +78,7 @@ const Landing = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.contentContainer}>
       <KeyboardAvoidingView behavior="position">
-        <Image source={require("../assets/logo.png")} style={styles.image} />
+        <Image source={require("../assets/QTSLogo.png")} style={styles.image} />
         <View style={styles.content}>
           <TextInput
             style={styles.textInputBox}
