@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -16,10 +16,10 @@ const BookList = ({ navigation }) => {
       <View style={styles.item}>
         <Pressable
           onPress={() => {
-            navigation.navigate("BookDetails");
+            navigation.navigate("BookDetails", { isbn: "1505297400" });
           }}
           onLongPress={() => {
-            alert("hurray! Deleted")
+            alert("hurray! Deleted");
           }}
         >
           <Text style={styles.title}>{title}</Text>
@@ -30,8 +30,9 @@ const BookList = ({ navigation }) => {
   };
 
   useEffect(() => {
-     setBooks([
+    setBooks([
       {
+        isbn: "9780978649319",
         title: "The Psychopath Test1",
         author: "Jon Ronson",
         img_url:
@@ -58,21 +59,26 @@ const BookList = ({ navigation }) => {
     ]);
   }, []);
 
-
-
   return (
     <View>
       <Text>Hello from book list!</Text>
-      <View >
-        {books.length == 0 ? <Text>Nothing to see here!</Text> : 
-        <FlatList
-          horizontal
-          pagingEnabled={true}
-          showsHorizontalScrollIndicator={true}
-          data={books}
-          renderItem={({ item }) => (<View><Item title={item.title} img_url={item.img_url} /></View>)}
-          keyExtractor={(item) => item.title}
-        />}
+      <View>
+        {books.length == 0 ? (
+          <Text>Nothing to see here!</Text>
+        ) : (
+          <FlatList
+            horizontal
+            pagingEnabled={true}
+            showsHorizontalScrollIndicator={true}
+            data={books}
+            renderItem={({ item }) => (
+              <View>
+                <Item title={item.title} img_url={item.img_url} />
+              </View>
+            )}
+            keyExtractor={(item) => item.title}
+          />
+        )}
       </View>
     </View>
   );
