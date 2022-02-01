@@ -10,11 +10,14 @@ import {
 import app from "../../firebase-config";
 
 async function bookRecs() {
-  const firestore = getFirestore(); //connects to database
-  const bookISBN = "9780007447862"; //using a static ISBN currently, can be passed on props
-  const bookRef = doc(firestore, `books/${bookISBN}`); //get the document
-  const bookSnap = await getDoc(bookRef); // get document data
-  const bookVotes = bookSnap.data().drinkPairings; //drills to vote data
+  let firstRec = "";
+  let secondRec = "";
+  const userDrinkArray = [];
+  const firestore = getFirestore();
+  const bookISBN = "9780007447862";
+  const bookRef = doc(firestore, `books/${bookISBN}`);
+  const bookSnap = await getDoc(bookRef);
+  const bookVotes = bookSnap.data().drinkPairings;
 
   const userRef = doc(firestore, `users/phone@test.com`);
   const userSnap = await getDoc(userRef);
@@ -44,10 +47,6 @@ async function bookRecs() {
       : null;
   }
 
-  let firstRec = "";
-  //   let secondRec = "";
-  const userDrinkArray = [];
-
   for (let i = 0; i < drinkChoices.length; i++) {
     let drinkQuery = query(
       collection(firestore, `drinks`),
@@ -74,28 +73,27 @@ async function bookRecs() {
     }
   }
 
-  //   let arr = Object.values(userDrinkObject);
-  //   let highScore = Math.max(...arr);
+  let findHighestScore = Object.values(userDrinkObject);
+  let highScore = Math.max(...findHighestScore);
 
-  //   for (let drink in userDrinkObject) {
-  //    firstRec ? userDrinkObject[drink] === highScore :
-  //   }
+  for (let drink in userDrinkObject) {
+    if (userDrinkObject[drink] === highScore && !firstRec) {
+      firstRec = drink;
+      userDrinkObject[drink] = 0;
+    }
+  }
 
-  //   const checkObj = (obj) => {};
+  findHighestScore = Object.values(userDrinkObject);
+  highScore = Math.max(...findHighestScore);
 
-  //create an object will all the drinks a user would drink
-  //eg drinksObj {beer:0 , wine:0 , ale:0}
+  for (let drink in userDrinkObject) {
+    if (userDrinkObject[drink] === highScore) {
+      secondRec = drink;
+      userDrinkObject[drink] = 0;
+    }
+  }
 
-  //read though all the book pairing votes and incriment the values for each vote
-  // eg drinksObj {beer:1 , wine:0 , ale:1}
-
-  //return the top 2 of the object
-  //eg firstRec="beer" secondRec="ale"
-
-  //if theres not enough return random ones
-
-  //   return { firstRec, secondRec, userDrinkArray };
-  return console.log("end", firstRec, userDrinkObject);
+  return { firstRec, secondRec, userDrinkArray };
 }
 
 export default bookRecs;
