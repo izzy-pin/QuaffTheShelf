@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { getAuth } from "firebase/auth";
 import {
   Text,
   View,
@@ -7,62 +8,58 @@ import {
   Image,
   Pressable,
 } from "react-native";
+import { readUserLibrary, readBookListDetails } from "../utils/firebase-funcs";
+import defaultCover from "../assets/defaultCover.png";
 
 const BookList = ({ navigation }) => {
   const [books, setBooks] = useState([]);
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const email = user.email;
 
-  const Item = ({ title, img_url }) => {
+  const Item = ({ bookTitle, bookCover, isbn }) => {
     return (
       <View style={styles.item}>
         <Pressable
           onPress={() => {
-            navigation.navigate("BookDetails", { isbn: "1505297400" });
+            navigation.navigate("BookDetails", { isbn });
           }}
           onLongPress={() => {
             alert("hurray! Deleted");
           }}
         >
-          <Text style={styles.title}>{title}</Text>
-          <Image style={imageStyle} source={{ uri: img_url }} />
+          <Text style={styles.title}>{bookTitle}</Text>
+          <Image
+            style={imageStyle}
+            source={
+              bookCover === "No image found" ? defaultCover : { uri: bookCover }
+            }
+          />
         </Pressable>
       </View>
     );
   };
 
   useEffect(() => {
-    setBooks([
-      {
-        isbn: "9780978649319",
-        title: "The Psychopath Test1",
-        author: "Jon Ronson",
-        img_url:
-          "https://images-eu.ssl-images-amazon.com/images/I/51ZGxfriOfL._SY291_BO1,204,203,200_QL40_ML2_.jpg",
-      },
-      {
-        title: "The Psychopath Test2",
-        author: "Jon Ronson",
-        img_url:
-          "https://images-eu.ssl-images-amazon.com/images/I/51ZGxfriOfL._SY291_BO1,204,203,200_QL40_ML2_.jpg",
-      },
-      {
-        title: "The Psychopath Test3",
-        author: "Jon Ronson",
-        img_url:
-          "https://images-eu.ssl-images-amazon.com/images/I/51ZGxfriOfL._SY291_BO1,204,203,200_QL40_ML2_.jpg",
-      },
-      {
-        title: "The Psychopath Test4",
-        author: "Jon Ronson",
-        img_url:
-          "https://images-eu.ssl-images-amazon.com/images/I/51ZGxfriOfL._SY291_BO1,204,203,200_QL40_ML2_.jpg",
-      },
-    ]);
+    readUserLibrary(email)
+      .then((isbnLibrary) => {
+        return isbnLibrary;
+      })
+      .then((isbnLibrary) => {
+        return readBookListDetails(isbnLibrary);
+      })
+      .then((bookDetailsFromDB) => {
+        setBooks(bookDetailsFromDB);
+      })
+      .catch((err) => {
+        console.log("Error: ", err);
+      });
   }, []);
 
   return (
     <View>
-      <Text>Hello from book list!</Text>
       <View>
+        <Text>Total books in library : {books.length}</Text>
         {books.length == 0 ? (
           <Text>Nothing to see here!</Text>
         ) : (
@@ -73,10 +70,14 @@ const BookList = ({ navigation }) => {
             data={books}
             renderItem={({ item }) => (
               <View>
-                <Item title={item.title} img_url={item.img_url} />
+                <Item
+                  bookTitle={item.bookTitle}
+                  bookCover={item.bookCover}
+                  isbn={item.isbn}
+                />
               </View>
             )}
-            keyExtractor={(item) => item.title}
+            keyExtractor={(item) => item.isbn}
           />
         )}
       </View>
