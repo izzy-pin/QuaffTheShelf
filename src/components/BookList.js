@@ -8,7 +8,11 @@ import {
   Image,
   Pressable,
 } from "react-native";
-import { readUserLibrary, readBookListDetails } from "../utils/firebase-funcs";
+import {
+  readUserLibrary,
+  readBookListDetails,
+  deleteBookFromUserLibrary,
+} from "../utils/firebase-funcs";
 import defaultCover from "../assets/defaultCover.png";
 
 const BookList = ({ navigation }) => {
@@ -25,7 +29,10 @@ const BookList = ({ navigation }) => {
             navigation.navigate("BookDetails", { isbn });
           }}
           onLongPress={() => {
-            alert("hurray! Deleted");
+            deleteBookFromUserLibrary(isbn, email).catch((err) => {
+              console.log(err);
+            });
+            console.log("line 29 ->", isbn);
           }}
         >
           <Text style={styles.title}>{bookTitle}</Text>
