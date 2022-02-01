@@ -45,7 +45,11 @@ const App = () => {
           name="Landing"
           component={Landing}
         />
-        <Drawer.Screen name="Home" component={Home} />
+        <Drawer.Screen
+          name="Home"
+          component={Home}
+          options={{ unmountOnBlur: true }}
+        />
         <Drawer.Screen
           name="AddBook"
           component={AddBook}
@@ -54,7 +58,10 @@ const App = () => {
         <Drawer.Screen name="AddClub" component={AddClub} />
         <Drawer.Screen name="JoinClub" component={JoinClub} />
         <Drawer.Screen
-          options={{ drawerItemStyle: { display: "none" } }}
+          options={{
+            unmountOnBlur: true,
+            drawerItemStyle: { display: "none" },
+          }}
           name="BookDetails"
           component={BookDetails}
         />
