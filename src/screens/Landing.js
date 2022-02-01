@@ -11,6 +11,8 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ScrollView,
+  StyleSheet,
+  Image,
 } from "react-native";
 import { useState } from "react";
 import app from "../../firebase-config";
@@ -22,9 +24,9 @@ const Landing = ({ navigation }) => {
   const handleCreateAccount = () => {
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        console.log(user);
+      .then(() => {
+        setEmail("");
+        setPassword("");
         navigation.navigate("UserProfile");
       })
       .catch((err) => {
@@ -49,9 +51,9 @@ const Landing = ({ navigation }) => {
   const handleLogIn = () => {
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        console.log(user);
+      .then(() => {
+        setEmail("");
+        setPassword("");
         navigation.navigate("Home");
       })
       .catch((err) => {
@@ -74,32 +76,80 @@ const Landing = ({ navigation }) => {
       });
   };
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={styles.contentContainer}>
       <KeyboardAvoidingView behavior="position">
-        <View>
+        <Image source={require("../assets/logo.png")} style={styles.image} />
+        <View style={styles.content}>
           <TextInput
+            style={styles.textInputBox}
             placeholder="Email"
+            keyboardType="email-address"
             value={email}
             onChangeText={(text) => setEmail(text)}
           ></TextInput>
           <TextInput
+            style={styles.textInputBox}
             placeholder="Password"
             value={password}
             onChangeText={(text) => setPassword(text)}
             secureTextEntry={true}
           ></TextInput>
         </View>
-        <View>
-          <TouchableOpacity onPress={handleLogIn}>
-            <Text>Log In</Text>
+        <View style={styles.content}>
+          <TouchableOpacity style={styles.button} onPress={handleLogIn}>
+            <Text style={styles.buttonText}>Log In</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleCreateAccount}>
-            <Text>Create Account</Text>
+          <TouchableOpacity style={styles.button} onPress={handleCreateAccount}>
+            <Text style={styles.buttonText}>Create Account</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
     </ScrollView>
   );
 };
+
+const wine = "#B43F5E";
+const white = "#FFFFFF";
+const gray = "gray";
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: wine,
+    borderRadius: 50,
+    margin: 5,
+    width: 200,
+  },
+  buttonText: {
+    color: white,
+    fontSize: 15,
+    margin: 5,
+    padding: 10,
+    textAlign: "center",
+  },
+  content: {
+    alignItems: "center",
+  },
+  contentContainer: {
+    alignItems: "center",
+    flexGrow: 1,
+    justifyContent: "center",
+  },
+  image: {
+    alignSelf: "center",
+    height: 100,
+    marginVertical: "30%",
+    width: 100,
+  },
+  textInputBox: {
+    borderColor: gray,
+    borderRadius: 10,
+    borderWidth: 2,
+    fontSize: 15,
+    margin: 5,
+    padding: 10,
+    textAlign: "center",
+    width: 200,
+  },
+});
 
 export default Landing;
