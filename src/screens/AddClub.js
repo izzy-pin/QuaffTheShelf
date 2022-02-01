@@ -1,7 +1,7 @@
 import React from "react";
-import bookRecs from "../components/PairingLogic";
 
 import { View, Text, Button } from "react-native";
+import addVotes from "../utils/addVotes";
 
 const AddClub = () => {
   return (
@@ -10,7 +10,7 @@ const AddClub = () => {
       <Button
         title="Book Rec Test"
         onPress={() => {
-          bookRecs();
+          addVotes();
         }}
       />
     </View>
