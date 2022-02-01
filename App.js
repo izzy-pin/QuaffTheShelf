@@ -45,7 +45,11 @@ const App = () => {
           name="Landing"
           component={Landing}
         />
-        <Drawer.Screen name="Home" component={Home} />
+        <Drawer.Screen
+          name="Home"
+          component={Home}
+          options={{ unmountOnBlur: true }}
+        />
         <Drawer.Screen
           name="AddBook"
           component={AddBook}

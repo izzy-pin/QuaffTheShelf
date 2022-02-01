@@ -49,12 +49,18 @@ export const readUserLibrary = async (email) => {
 export const readBookListDetails = async (isbnArr) => {
   const booksRef = collection(firestore, "books");
   const bookDetails = [];
-  const q = query(booksRef, where("__name__", "in", isbnArr));
-  const snapshot = await getDocs(q);
-  snapshot.forEach((doc) => {
-    const bookFromDb = doc.data();
-    bookFromDb.isbn = doc.id;
-    bookDetails.push(bookFromDb);
-  });
+
+  while (isbnArr.length) {
+    const batch = isbnArr.splice(0, 10);
+    const q = query(booksRef, where("__name__", "in", batch));
+
+    const snapshot = await getDocs(q);
+    snapshot.forEach((doc) => {
+      const bookFromDb = doc.data();
+      bookFromDb.isbn = doc.id;
+      bookDetails.push(bookFromDb);
+    });
+  }
+
   return bookDetails;
 };
