@@ -54,7 +54,10 @@ const App = () => {
         <Drawer.Screen name="AddClub" component={AddClub} />
         <Drawer.Screen name="JoinClub" component={JoinClub} />
         <Drawer.Screen
-          options={{ drawerItemStyle: { display: "none" } }}
+          options={{
+            unmountOnBlur: true,
+            drawerItemStyle: { display: "none" },
+          }}
           name="BookDetails"
           component={BookDetails}
         />
