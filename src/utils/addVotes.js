@@ -1,16 +1,23 @@
-import { getFirestore, doc, updateDoc } from "firebase/firestore";
+import { getFirestore, doc, updateDoc, getDoc } from "firebase/firestore";
 
 async function addVotes() {
   const ISBN = 9780141035796;
-  const username = "test@test.com";
+  const username = "phone@test.com";
   const firestore = getFirestore();
-  const drink = "Pinot Noir Rosé";
-  const userVote = { [username]: { drink: `${drink}` } };
+  const drink = "Amstel";
 
-  const docRef = doc(firestore, "books", `${ISBN}`);
-  await updateDoc(docRef, {
-    drinkPairings: userVote,
-  });
+  const readDocRef = doc(firestore, `books/${ISBN}`);
+  const book = await getDoc(readDocRef);
+
+  const drinkPairings = book.get("drinkPairings");
+
+  const newDrinkPairings = {
+    [username]: { drink: `${drink}` },
+    ...drinkPairings,
+  };
+  console.log(newDrinkPairings);
+
+  const updateDocRef = doc(firestore, "books", `${ISBN}`);
+  await updateDoc(updateDocRef, { drinkPairings: newDrinkPairings });
 }
-
 export default addVotes;
