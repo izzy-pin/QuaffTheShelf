@@ -1,10 +1,7 @@
 import { getFirestore, doc, updateDoc, getDoc } from "firebase/firestore";
 
-async function addVotes() {
-  const ISBN = 9780141035796;
-  const username = "phone@test.com";
+async function addVotes(user, ISBN, drink) {
   const firestore = getFirestore();
-  const drink = "Amstel";
 
   const readDocRef = doc(firestore, `books/${ISBN}`);
   const book = await getDoc(readDocRef);
@@ -12,7 +9,7 @@ async function addVotes() {
   const drinkPairings = book.get("drinkPairings");
 
   const newDrinkPairings = {
-    [username]: { drink: `${drink}` },
+    [user]: { drink: `${drink}` },
     ...drinkPairings,
   };
   console.log(newDrinkPairings);
