@@ -16,7 +16,7 @@ const BookList = ({ navigation }) => {
       <View style={styles.item}>
         <Pressable
           onPress={() => {
-            navigation.navigate("BookDetails", { isbn: "9780978649319" });
+            navigation.navigate("BookDetails", { isbn: "1505297400" });
           }}
           onLongPress={() => {
             alert("hurray! Deleted");
