@@ -6,9 +6,8 @@ const glass = "rgba(150, 150, 150, 0.5)";
 const gray = "gray";
 
 const styles = StyleSheet.create({
-
-  addBookButtonContainer: { 
-    alignItems: "center" 
+  addBookButtonContainer: {
+    alignItems: "center",
   },
 
   addBookScanner: {
@@ -21,6 +20,30 @@ const styles = StyleSheet.create({
 
   addBookScannerContainer: {
     flex: 1,
+  },
+  bookCover: {
+    height: 100,
+    resizeMode: "contain",
+    width: 300,
+  },
+
+  bookLibraryText: {
+    marginTop: 15,
+    textAlign: "center",
+  },
+  bookListBookTitle: {
+    fontSize: 32,
+    textAlign: "center",
+  },
+
+  bookListItem: {
+    marginHorizontal: 16,
+    marginVertical: 8,
+    padding: 20,
+  },
+
+  bookListPressable: {
+    alignItems: "center",
   },
 
   button: {
@@ -40,12 +63,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
-  headerBar:{
-    borderBottomWidth:1
+  headerBar: {
+    borderBottomWidth: 1,
   },
 
   headerBurger: {
     height: 35,
+    marginRight: 30,
     resizeMode: "contain",
     width: 35,
   },
@@ -58,6 +82,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   headerImage: {
+    borderRadius: 50 / 2,
     height: 50,
     resizeMode: "contain",
     width: 50,
@@ -103,6 +128,22 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlign: "center",
     width: 200,
+  },
+
+  profilePicture: {
+    borderRadius: 80 / 2,
+    height: 80,
+    resizeMode: "contain",
+    width: 80,
+  },
+  userProfileContent: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    marginTop: 10,
+  },
+  userProfileText: {
+    margin: 10,
   },
 });
 

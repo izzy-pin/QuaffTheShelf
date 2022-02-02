@@ -1,61 +1,58 @@
 import React, { useEffect, useState } from "react";
 
-import { Button, View, Text, Image, StyleSheet } from "react-native";
+import { Button, View, Text, Image } from "react-native";
 import BookList from "../components/BookList";
 import { getAuth } from "firebase/auth";
 import { getUserProfile } from "../utils/firebase-funcs";
+import styles from "../utils/styles";
 
 const Home = ({ navigation }) => {
   const [name, setName] = useState("");
   const [profilePic, setProfilePic] = useState("");
-  // const [isError, setIsError] = useState(false);
+
   const auth = getAuth();
   const user = auth.currentUser;
   const email = user.email;
 
   useEffect(() => {
-    // setIsError(false);
-    getUserProfile(email)
-      .then((userDetails) => {
-        setName(userDetails.name);
-        setProfilePic(userDetails.profilePicUrl);
-      })
-      .catch(() => {
-        // setIsError(true);
-      });
+    getUserProfile(email).then((userDetails) => {
+      setName(userDetails.name);
+      setProfilePic(userDetails.profilePicUrl);
+    });
   }, []);
   return (
     <View>
-      <Text>Hi, {name}!</Text>
+      <View style={styles.userProfileContent}>
+        <Text style={styles.userProfileText}>Hi, {name}!</Text>
 
-      <Image
-        style={styles.image}
-        source={
-          profilePic
-            ? {
-                uri: profilePic,
-              }
-            : require("../assets/hamburger.png")
-        }
-      />
+        <Image
+          style={styles.profilePicture}
+          source={
+            profilePic
+              ? {
+                  uri: profilePic,
+                }
+              : require("../assets/anonAvatar.png")
+          }
+        />
+      </View>
+
       <BookList navigation={navigation} />
       <Button
-        title="Add new book"
+        title="Add new book, get drink pairing"
         onPress={() => {
           navigation.navigate("AddBook");
         }}
       />
+      <Text style={styles.bookLibraryText}>
+        Scroll through your library and click on a book to see your previous
+        pairings
+      </Text>
+      <Text style={styles.bookLibraryText}>
+        Press and hold to delete a book from your library
+      </Text>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  image: {
-    borderRadius: 200 / 2,
-    height: 200,
-    resizeMode: "contain",
-    width: 200,
-  },
-});
 
 export default Home;

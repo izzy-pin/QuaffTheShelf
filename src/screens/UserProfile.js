@@ -167,6 +167,9 @@ const UserProfile = ({ navigation }) => {
       <Text style={styles.questionText}>
         What kind of pairing suggestions would you like with your books?
       </Text>
+      <Text style={styles.questionText}>
+        We&apos;ll only recommend drinks you like
+      </Text>
       <Text style={styles.selectText}>Please select:</Text>
       <View style={styles.radioQuestionsContainer}>
         <Pressable style={styles.radioContainer} onPress={alcoholRadio}>
@@ -350,7 +353,7 @@ const styles = StyleSheet.create({
   },
   questionText: {
     fontSize: 15,
-    paddingBottom: 5,
+    paddingBottom: 15,
     paddingHorizontal: 5,
   },
 

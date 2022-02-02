@@ -51,7 +51,7 @@ export const readUserLibrary = async (email) => {
 export const readBookListDetails = async (isbnArr) => {
   const booksRef = collection(firestore, "books");
   const bookDetails = [];
-
+  if (typeof isbnArr === "undefined") return [];
   while (isbnArr.length) {
     const batch = isbnArr.splice(0, 10);
     const q = query(booksRef, where("__name__", "in", batch));
