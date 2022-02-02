@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Button, TextInput } from "react-native";
+import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import axios from "axios";
 import {
@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import app from "../../firebase-config";
 import { getAuth } from "firebase/auth";
+import styles from "../utils/styles";
 
 const firestore = getFirestore();
 
@@ -112,47 +113,54 @@ const Barcode = ({ navigation }) => {
           keyboardType="numeric"
           onSubmitEditing={handleBarCodeScanned}
         />
-        <Button
+        <TouchableOpacity
+          style={styles.button}
           onPress={() => {
             navigation.navigate("Home");
           }}
-          title="Back"
-        />
+        >
+          <Text style={styles.buttonText}>Back</Text>
+        </TouchableOpacity>
       </View>
     );
   }
 
   return (
-    <View style={scannerStyle.container}>
-      <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={StyleSheet.absoluteFillObject}
-      />
-      {scanned && (
-        <View>
-          <Button
-            title={"Tap to Scan Again"}
-            onPress={() => setScanned(false)}
-          />
-          <Button
-            title="Continue to pairing"
-            onPress={() => navigation.navigate("BookDetails", isbn)}
-          />
-        </View>
-      )}
-      <Button
-        onPress={() => {
-          navigation.navigate("Home");
-        }}
-        title="Back"
-      />
-    </View>
+    <>
+      <View style={styles.addBookScannerContainer}>
+          <BarCodeScanner
+          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+          style={styles.addBookScanner}
+        />
+      </View>
+      <View style={styles.addBookButtonContainer}>
+        {scanned && (
+          <View>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => setScanned(false)}
+            >
+              <Text style={styles.buttonText}> Scan Again</Text>
+            </TouchableOpacity>
+
+           <TouchableOpacity
+           style={styles.button}
+           onPress={() => navigation.navigate("BookDetails", isbn)}>
+              <Text style = {styles.buttonText}> Book Details</Text>
+           </TouchableOpacity>
+          </View>
+        )}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            navigation.navigate("Home");
+          }}
+        >
+          <Text style={styles.buttonText}>Back</Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 };
 
-const scannerStyle = StyleSheet.create({
-  container: {
-    flex: 2,
-  },
-});
 export default Barcode;

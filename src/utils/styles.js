@@ -6,6 +6,23 @@ const glass = "rgba(150, 150, 150, 0.5)";
 const gray = "gray";
 
 const styles = StyleSheet.create({
+
+  addBookButtonContainer: { 
+    alignItems: "center" 
+  },
+
+  addBookScanner: {
+    ...StyleSheet.absoluteFillObject,
+    bottom: 175,
+    left: 10,
+    right: 10,
+    top: 10,
+  },
+
+  addBookScannerContainer: {
+    flex: 1,
+  },
+
   button: {
     backgroundColor: wine,
     borderRadius: 10,
