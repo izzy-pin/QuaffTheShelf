@@ -30,8 +30,8 @@ const RecommendDrink = ({ email, isbn }) => {
   }, []);
 
   const handleUpVote = (drink) => {
-    addVotes(email, isbn, drink);
     setAcceptedDrink(drink);
+    addVotes(email, isbn, drink).catch(() => setIsError(true));
   };
   return isError ? (
     <View>

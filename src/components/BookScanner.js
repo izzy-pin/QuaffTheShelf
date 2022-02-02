@@ -26,7 +26,8 @@ const Barcode = ({ navigation }) => {
   const email = user.email;
 
   useEffect(() => {
-    setIsError(false)(async () => {
+    (async () => {
+      setIsError(false);
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === "granted");
     })();
@@ -127,7 +128,7 @@ const Barcode = ({ navigation }) => {
   return (
     <>
       <View style={styles.addBookScannerContainer}>
-          <BarCodeScanner
+        <BarCodeScanner
           onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
           style={styles.addBookScanner}
         />
@@ -142,11 +143,12 @@ const Barcode = ({ navigation }) => {
               <Text style={styles.buttonText}> Scan Again</Text>
             </TouchableOpacity>
 
-           <TouchableOpacity
-           style={styles.button}
-           onPress={() => navigation.navigate("BookDetails", isbn)}>
-              <Text style = {styles.buttonText}> Book Details</Text>
-           </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("BookDetails", isbn)}
+            >
+              <Text style={styles.buttonText}> Book Details</Text>
+            </TouchableOpacity>
           </View>
         )}
         <TouchableOpacity

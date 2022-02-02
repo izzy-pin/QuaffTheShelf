@@ -35,10 +35,9 @@ const BookList = ({ navigation }) => {
               .then(() => {
                 setDeleteRefresh(true);
               })
-              .catch((err) => {
-                console.log(err);
+              .catch(() => {
+                setIsError(true);
               });
-            console.log("line 29 ->", isbn);
           }}
         >
           <Text style={styles.title}>{bookTitle}</Text>
