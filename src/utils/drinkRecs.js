@@ -10,7 +10,6 @@ import {
 import app from "../../firebase-config";
 
 async function drinkRecs(email, isbn) {
-  console.log("from drinkRecs", email, isbn);
   let firstRec = "";
   let secondRec = "";
   const userDrinkArray = [];

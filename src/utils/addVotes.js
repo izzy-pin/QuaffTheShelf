@@ -12,7 +12,6 @@ async function addVotes(user, ISBN, drink) {
     [user]: { drink: `${drink}` },
     ...drinkPairings,
   };
-  console.log(newDrinkPairings);
 
   const updateDocRef = doc(firestore, "books", `${ISBN}`);
   await updateDoc(updateDocRef, { drinkPairings: newDrinkPairings });
