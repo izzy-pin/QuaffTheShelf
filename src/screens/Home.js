@@ -6,18 +6,11 @@ import BookList from "../components/BookList";
 const Home = ({ navigation }) => {
   return (
     <View>
+      <BookList navigation={navigation} />
       <Button
         title="Add new book"
         onPress={() => {
           navigation.navigate("AddBook");
-        }}
-      />
-
-      <BookList navigation={navigation} />
-      <Button
-        title="Groups I belong to"
-        onPress={() => {
-          navigation.navigate("ClubList");
         }}
       />
     </View>

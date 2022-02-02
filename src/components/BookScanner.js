@@ -19,12 +19,13 @@ const Barcode = ({ navigation }) => {
   const [scanned, setScanned] = useState(false);
   const [number, setNumber] = useState(null);
   const [isbn, setIsbn] = useState({});
+  const [isError, setIsError] = useState(false);
   const auth = getAuth();
   const user = auth.currentUser;
   const email = user.email;
 
   useEffect(() => {
-    (async () => {
+    setIsError(false)(async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === "granted");
     })();
@@ -38,24 +39,19 @@ const Barcode = ({ navigation }) => {
       : (bookAddress = `http://openlibrary.org/api/volumes/brief/isbn/${data}.json`);
 
     alert(`ISBN: ${number ? number : data} added to library`);
-    // make an api call
     axios({ method: "get", url: bookAddress })
       .then((bookDetails) => {
         const dataID =
           bookDetails.data.records[Object.keys(bookDetails.data.records)[0]];
 
-        //isbn
         const bookFullISBN = dataID.details.bib_key;
         const bookISBN = bookFullISBN.slice(5);
         setIsbn({ isbn: bookISBN });
 
-        //author
         const bookAuthor = dataID.data.authors[0].name;
 
-        //title
         const bookTitle = dataID.data.title;
 
-        //subtitle
         let bookSubTitle = "";
         if (dataID.data.subtitle) {
           bookSubTitle = dataID.data.subtitle;
@@ -63,7 +59,6 @@ const Barcode = ({ navigation }) => {
           bookSubTitle = "No Subtitle found";
         }
 
-        // cover
         let bookCover = "";
         if (dataID.data.cover) {
           bookCover = dataID.data.cover.medium;
@@ -93,10 +88,14 @@ const Barcode = ({ navigation }) => {
         const docRef = doc(firestore, `users/${email}`);
         updateDoc(docRef, { bookLibrary: arrayUnion(bookISBN) });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        setIsError(true);
       });
   };
+
+  if (isError) {
+    return <Text>Sorry, something went wrong...</Text>;
+  }
 
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;

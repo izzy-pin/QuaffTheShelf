@@ -13,6 +13,7 @@ import defaultCover from "../assets/defaultCover.png";
 
 const BookList = ({ navigation }) => {
   const [books, setBooks] = useState([]);
+  const [isError, setIsError] = useState(false);
   const auth = getAuth();
   const user = auth.currentUser;
   const email = user.email;
@@ -41,6 +42,7 @@ const BookList = ({ navigation }) => {
   };
 
   useEffect(() => {
+    setIsError(false);
     readUserLibrary(email)
       .then((isbnLibrary) => {
         return isbnLibrary;
@@ -51,12 +53,16 @@ const BookList = ({ navigation }) => {
       .then((bookDetailsFromDB) => {
         setBooks(bookDetailsFromDB);
       })
-      .catch((err) => {
-        console.log("Error: ", err);
+      .catch(() => {
+        setIsError(true);
       });
   }, []);
 
-  return (
+  return isError ? (
+    <View>
+      <Text>Sorry, something went wrong...</Text>
+    </View>
+  ) : (
     <View>
       <View>
         <Text>Total books in library : {books.length}</Text>

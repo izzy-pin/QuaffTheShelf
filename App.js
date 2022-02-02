@@ -6,12 +6,8 @@ import { getAuth } from "firebase/auth";
 import Landing from "./src/screens/Landing";
 import Home from "./src/screens/Home";
 import AddBook from "./src/screens/AddBook";
-import AddClub from "./src/screens/AddClub";
 import BookDetails from "./src/screens/BookDetails";
-import ClubDetails from "./src/screens/ClubDetails";
-import ClubList from "./src/screens/ClubList";
 import Header from "./src/components/Header";
-import JoinClub from "./src/screens/JoinClub";
 import UserProfile from "./src/screens/UserProfile";
 
 import app from "./firebase-config";
@@ -55,8 +51,6 @@ const App = () => {
           component={AddBook}
           options={{ unmountOnBlur: true }}
         />
-        <Drawer.Screen name="AddClub" component={AddClub} />
-        <Drawer.Screen name="JoinClub" component={JoinClub} />
         <Drawer.Screen
           options={{
             unmountOnBlur: true,
@@ -65,12 +59,6 @@ const App = () => {
           name="BookDetails"
           component={BookDetails}
         />
-        <Drawer.Screen
-          options={{ drawerItemStyle: { display: "none" } }}
-          name="ClubDetails"
-          component={ClubDetails}
-        />
-        <Drawer.Screen name="ClubList" component={ClubList} />
         <Drawer.Screen
           name="UserProfile"
           component={UserProfile}
