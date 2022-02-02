@@ -19,7 +19,7 @@ const BookList = ({ navigation }) => {
 
   const Item = ({ bookTitle, bookCover, isbn }) => {
     return (
-      <View style={styles.bookListItem}>
+      <View>
         <Pressable
           onPress={() => {
             navigation.navigate("BookDetails", { isbn });
@@ -35,15 +35,19 @@ const BookList = ({ navigation }) => {
           }}
           style={styles.bookListPressable}
         >
-          <Text style={styles.bookListBookTitle}>
-            {bookTitle.length > 13 ? bookTitle.slice(0, 14) + "..." : bookTitle}
-          </Text>
           <Image
             style={styles.bookCover}
             source={
               bookCover === "No image found" ? defaultCover : { uri: bookCover }
             }
           />
+          <Text 
+          style={styles.bookListBookTitle} 
+          adjustsFontSizeToFit
+          numberOfLines={2}>
+             {bookTitle}
+          </Text>
+          
         </Pressable>
       </View>
     );
@@ -86,12 +90,13 @@ const BookList = ({ navigation }) => {
           </Text>
         ) : (
           <FlatList
+            style={styles.bookListFlat}
             horizontal
-            pagingEnabled={true}
+            centerContent={true}
             showsHorizontalScrollIndicator={true}
             data={books}
             renderItem={({ item }) => (
-              <View>
+              <View style={styles.bookListItem}>
                 <Item
                   bookTitle={item.bookTitle}
                   bookCover={item.bookCover}
