@@ -5,9 +5,9 @@ import {
   TouchableHighlight,
   Text,
   TouchableOpacity,
-  StyleSheet,
 } from "react-native";
 import { getAuth, signOut } from "@firebase/auth";
+import styles from "../utils/styles"
 
 const Header = ({ navigation }) => {
   const handleLogOut = () => {
@@ -17,9 +17,9 @@ const Header = ({ navigation }) => {
     });
   };
   return (
-    <>
-      <View style={styles.screenTopMargin}></View>
-      <View style={styles.content}>
+    <View style={styles.headerBar}>
+      <View style={styles.headerScreenTopMargin}></View>
+      <View style={styles.headerContent}>
         <TouchableHighlight
           onPress={() => {
             navigation.openDrawer();
@@ -27,7 +27,7 @@ const Header = ({ navigation }) => {
         >
           <Image
             source={require("../assets/hamburger.png")}
-            style={styles.burger}
+            style={styles.headerBurger}
           />
         </TouchableHighlight>
         <TouchableHighlight
@@ -35,44 +35,14 @@ const Header = ({ navigation }) => {
             navigation.navigate("Home");
           }}
         >
-          <Image source={require("../assets/QTSLogoTextless.png")} style={styles.image} />
+          <Image source={require("../assets/QTSLogoTextless.png")} style={styles.headerImage} />
         </TouchableHighlight>
         <TouchableOpacity onPress={handleLogOut}>
-          <Text style={styles.logOutText}>Log Out</Text>
+          <Text style={styles.headerLogOutText}>Log Out</Text>
         </TouchableOpacity>
       </View>
-    </>
+    </View>
   );
 };
-
-const white = "#FFFFFF";
-
-const styles = StyleSheet.create({
-  burger: {
-    height: 35,
-    resizeMode: "contain",
-    width: 35,
-  },
-  content: {
-    alignItems: "center",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 10,
-    width: "100%",
-  },
-  image: {
-    height: 50,
-    resizeMode: "contain",
-    width: 50,
-  },
-  logOutText: {
-    fontSize: 18,
-  },
-  screenTopMargin: {
-    color: white,
-    height: 20,
-  },
-});
 
 export default Header;

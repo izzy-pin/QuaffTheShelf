@@ -8,21 +8,27 @@ import RecommendDrink from "../components/RecommendDrink";
 const BookDetails = ({ route }) => {
   const { isbn } = route.params;
   const [book, setBook] = useState({});
+  const [isError, setIsError] = useState(false);
 
   const auth = getAuth();
   const user = auth.currentUser;
   const email = user.email;
 
   useEffect(() => {
+    setIsError(false);
     readBookDetails(isbn)
       .then((bookFromApi) => {
         setBook(bookFromApi);
       })
-      .catch((err) => {
-        console.log("There's been an error, ", err);
+      .catch(() => {
+        setIsError(true);
       });
   }, []);
-  return (
+  return isError ? (
+    <View>
+      <Text>Sorry, something went wrong...</Text>
+    </View>
+  ) : (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.container}>
         <View style={styles.book}>
