@@ -17,6 +17,7 @@ import defaultCover from "../assets/defaultCover.png";
 
 const BookList = ({ navigation }) => {
   const [books, setBooks] = useState([]);
+  const [deleteRefresh, setDeleteRefresh] = useState(false);
   const auth = getAuth();
   const user = auth.currentUser;
   const email = user.email;
@@ -29,9 +30,13 @@ const BookList = ({ navigation }) => {
             navigation.navigate("BookDetails", { isbn });
           }}
           onLongPress={() => {
-            deleteBookFromUserLibrary(isbn, email).catch((err) => {
-              console.log(err);
-            });
+            deleteBookFromUserLibrary(isbn, email)
+              .then(() => {
+                setDeleteRefresh(true);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
             console.log("line 29 ->", isbn);
           }}
         >
@@ -48,6 +53,7 @@ const BookList = ({ navigation }) => {
   };
 
   useEffect(() => {
+    setDeleteRefresh(false);
     readUserLibrary(email)
       .then((isbnLibrary) => {
         return isbnLibrary;
@@ -61,7 +67,7 @@ const BookList = ({ navigation }) => {
       .catch((err) => {
         console.log("Error: ", err);
       });
-  }, []);
+  }, [deleteRefresh]);
 
   return (
     <View>
