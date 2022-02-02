@@ -1,19 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
-import {
-  Text,
-  View,
-  FlatList,
-  StyleSheet,
-  Image,
-  Pressable,
-} from "react-native";
+import { Text, View, FlatList, Image, Pressable } from "react-native";
 import {
   readUserLibrary,
   readBookListDetails,
   deleteBookFromUserLibrary,
 } from "../utils/firebase-funcs";
 import defaultCover from "../assets/defaultCover.png";
+import styles from "../utils/styles";
 
 const BookList = ({ navigation }) => {
   const [books, setBooks] = useState([]);
@@ -25,7 +19,7 @@ const BookList = ({ navigation }) => {
 
   const Item = ({ bookTitle, bookCover, isbn }) => {
     return (
-      <View style={styles.item}>
+      <View style={styles.bookListItem}>
         <Pressable
           onPress={() => {
             navigation.navigate("BookDetails", { isbn });
@@ -39,10 +33,13 @@ const BookList = ({ navigation }) => {
                 setIsError(true);
               });
           }}
+          style={styles.bookListPressable}
         >
-          <Text style={styles.title}>{bookTitle}</Text>
+          <Text style={styles.bookListBookTitle}>
+            {bookTitle.length > 13 ? bookTitle.slice(0, 14) + "..." : bookTitle}
+          </Text>
           <Image
-            style={imageStyle}
+            style={styles.bookCover}
             source={
               bookCover === "No image found" ? defaultCover : { uri: bookCover }
             }
@@ -77,9 +74,16 @@ const BookList = ({ navigation }) => {
   ) : (
     <View>
       <View>
-        <Text>Total books in library : {books.length}</Text>
+        <View>
+          <Text style={styles.bookLibraryText}>
+            You have {books.length} books in your library
+          </Text>
+        </View>
         {books.length == 0 ? (
-          <Text>Nothing to see here!</Text>
+          <Text>
+            To get started finding the perfect drink pairing for your latest
+            read, add your book to your library
+          </Text>
         ) : (
           <FlatList
             horizontal
@@ -102,18 +106,5 @@ const BookList = ({ navigation }) => {
     </View>
   );
 };
-
-const imageStyle = { width: 300, height: 100, resizeMode: "contain" };
-
-const styles = StyleSheet.create({
-  item: {
-    marginHorizontal: 16,
-    marginVertical: 8,
-    padding: 20,
-  },
-  title: {
-    fontSize: 32,
-  },
-});
 
 export default BookList;

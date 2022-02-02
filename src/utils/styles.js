@@ -20,8 +20,12 @@ const styles = StyleSheet.create({
   addBookScannerContainer: {
     flex: 1,
   },
-
-  bookDetailsBackground: {
+  bookCover: {
+    height: 100,
+    resizeMode: "contain",
+    width: 300,
+  },
+   bookDetailsBackground: {
     resizeMode: "cover",
   },
 
@@ -60,6 +64,27 @@ const styles = StyleSheet.create({
     paddingBottom: 250
   },
 
+
+  bookLibraryText: {
+    marginTop: 15,
+    textAlign: "center",
+  },
+  bookListBookTitle: {
+    fontSize: 32,
+    textAlign: "center",
+  },
+
+  bookListItem: {
+    marginHorizontal: 16,
+    marginVertical: 8,
+    padding: 20,
+  },
+
+  bookListPressable: {
+    alignItems: "center",
+  },
+
+ 
   button: {
     backgroundColor: wine,
     borderRadius: 10,
@@ -83,6 +108,7 @@ const styles = StyleSheet.create({
 
   headerBurger: {
     height: 35,
+    marginRight: 30,
     resizeMode: "contain",
     width: 35,
   },
@@ -95,6 +121,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   headerImage: {
+    borderRadius: 50 / 2,
     height: 50,
     resizeMode: "contain",
     width: 50,
@@ -141,8 +168,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     width: 200,
   },
-
-  recButton: {
+    recButton: {
     backgroundColor: wine,
     borderRadius: 10,
     margin: 5,
@@ -166,7 +192,23 @@ const styles = StyleSheet.create({
 
   recDropDown:{
     width: 250
-  }
+  },
+
+  profilePicture: {
+    borderRadius: 80 / 2,
+    height: 80,
+    resizeMode: "contain",
+    width: 80,
+  },
+  userProfileContent: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    marginTop: 10,
+  },
+  userProfileText: {
+    margin: 10,
+  },
 
 });
 
