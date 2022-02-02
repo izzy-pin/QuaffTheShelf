@@ -13,23 +13,31 @@ const RecommendDrink = ({ email, isbn }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([]);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
-    drinkRecs(email, isbn).then((recsFromDrinksRecs) => {
-      setRecs(recsFromDrinksRecs);
-      setItems(
-        recsFromDrinksRecs.userDrinkArray.map((drink) => {
-          return { label: drink, value: drink };
-        })
-      );
-    });
+    setIsError(false);
+    drinkRecs(email, isbn)
+      .then((recsFromDrinksRecs) => {
+        setRecs(recsFromDrinksRecs);
+        setItems(
+          recsFromDrinksRecs.userDrinkArray.map((drink) => {
+            return { label: drink, value: drink };
+          })
+        );
+      })
+      .catch(() => setIsError(true));
   }, []);
 
   const handleUpVote = (drink) => {
-    addVotes(email, isbn, drink);
     setAcceptedDrink(drink);
+    addVotes(email, isbn, drink).catch(() => setIsError(true));
   };
-  return (
+  return isError ? (
+    <View>
+      <Text>Sorry, something went wrong...</Text>
+    </View>
+  ) : (
     <View>
       {acceptedDrink.length > 0 ? (
         <Text>You have chosen {acceptedDrink}!</Text>

@@ -17,6 +17,7 @@ import defaultCover from "../assets/defaultCover.png";
 
 const BookList = ({ navigation }) => {
   const [books, setBooks] = useState([]);
+  const [isError, setIsError] = useState(false);
   const [deleteRefresh, setDeleteRefresh] = useState(false);
   const auth = getAuth();
   const user = auth.currentUser;
@@ -34,10 +35,9 @@ const BookList = ({ navigation }) => {
               .then(() => {
                 setDeleteRefresh(true);
               })
-              .catch((err) => {
-                console.log(err);
+              .catch(() => {
+                setIsError(true);
               });
-            console.log("line 29 ->", isbn);
           }}
         >
           <Text style={styles.title}>{bookTitle}</Text>
@@ -53,6 +53,7 @@ const BookList = ({ navigation }) => {
   };
 
   useEffect(() => {
+    setIsError(false);
     setDeleteRefresh(false);
     readUserLibrary(email)
       .then((isbnLibrary) => {
@@ -64,12 +65,16 @@ const BookList = ({ navigation }) => {
       .then((bookDetailsFromDB) => {
         setBooks(bookDetailsFromDB);
       })
-      .catch((err) => {
-        console.log("Error: ", err);
+      .catch(() => {
+        setIsError(true);
       });
   }, [deleteRefresh]);
 
-  return (
+  return isError ? (
+    <View>
+      <Text>Sorry, something went wrong...</Text>
+    </View>
+  ) : (
     <View>
       <View>
         <Text>Total books in library : {books.length}</Text>
