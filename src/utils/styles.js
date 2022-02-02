@@ -141,6 +141,33 @@ const styles = StyleSheet.create({
     textAlign: "center",
     width: 200,
   },
+
+  recButton: {
+    backgroundColor: wine,
+    borderRadius: 10,
+    margin: 5,
+    width: 100,
+  },
+
+  recButtonText: {
+    borderColor: gray,
+    borderRadius: 10,
+    borderWidth: 2,
+    color: white,
+    fontSize: 15,
+    padding: 10,
+    textAlign: "center",
+  },
+
+  recContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+
+  recDropDown:{
+    width: 250
+  }
+
 });
 
 export default styles;
