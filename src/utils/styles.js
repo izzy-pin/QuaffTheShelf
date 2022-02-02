@@ -197,6 +197,7 @@ const styles = StyleSheet.create({
   recDropDown: {
     width: 250,
   },
+
   userProfileContent: {
     alignItems: "center",
     flexDirection: "row",
