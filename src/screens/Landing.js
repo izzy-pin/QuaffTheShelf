@@ -11,11 +11,12 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ScrollView,
-  StyleSheet,
   Image,
+  ImageBackground,
 } from "react-native";
 import { useState } from "react";
 import app from "../../firebase-config";
+import styles from "../utils/styles";
 
 const Landing = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -76,80 +77,50 @@ const Landing = ({ navigation }) => {
       });
   };
   return (
-    <ScrollView contentContainerStyle={styles.contentContainer}>
-      <KeyboardAvoidingView behavior="position">
-        <Image source={require("../assets/QTSLogo.png")} style={styles.image} />
-        <View style={styles.content}>
-          <TextInput
-            style={styles.textInputBox}
-            placeholder="Email"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          ></TextInput>
-          <TextInput
-            style={styles.textInputBox}
-            placeholder="Password"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            secureTextEntry={true}
-          ></TextInput>
-        </View>
-        <View style={styles.content}>
-          <TouchableOpacity style={styles.button} onPress={handleLogIn}>
-            <Text style={styles.buttonText}>Log In</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={handleCreateAccount}>
-            <Text style={styles.buttonText}>Create Account</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
-    </ScrollView>
+    <ImageBackground
+      source={require("../assets/landingBackground.png")}
+      resizeMode="cover"
+      style={styles.landingBackground}
+    >
+      <ScrollView contentContainerStyle={styles.landingContentContainer}>
+        <KeyboardAvoidingView behavior="position">
+          <Image
+            source={require("../assets/QTSLogo.png")}
+            style={styles.landingLargeLogo}
+          />
+          <View style={styles.landingGlassContent}>
+            <View style={styles.landingContent}>
+              <TextInput
+                style={styles.landingTextInputBox}
+                placeholder="Email"
+                keyboardType="email-address"
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+              ></TextInput>
+              <TextInput
+                style={styles.landingTextInputBox}
+                placeholder="Password"
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+                secureTextEntry={true}
+              ></TextInput>
+            </View>
+            <View style={styles.landingContent}>
+              <TouchableOpacity style={styles.button} onPress={handleLogIn}>
+                <Text style={styles.buttonText}>Log In</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleCreateAccount}
+              >
+                <Text style={styles.buttonText}>Create Account</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </ScrollView>
+    </ImageBackground>
   );
 };
-
-const wine = "#B43F5E";
-const white = "#FFFFFF";
-const gray = "gray";
-
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: wine,
-    borderRadius: 50,
-    margin: 5,
-    width: 200,
-  },
-  buttonText: {
-    color: white,
-    fontSize: 15,
-    margin: 5,
-    padding: 10,
-    textAlign: "center",
-  },
-  content: {
-    alignItems: "center",
-  },
-  contentContainer: {
-    alignItems: "center",
-    flexGrow: 1,
-    justifyContent: "center",
-  },
-  image: {
-    alignSelf: "center",
-    height: 100,
-    marginVertical: "30%",
-    width: 100,
-  },
-  textInputBox: {
-    borderColor: gray,
-    borderRadius: 10,
-    borderWidth: 2,
-    fontSize: 15,
-    margin: 5,
-    padding: 10,
-    textAlign: "center",
-    width: 200,
-  },
-});
 
 export default Landing;
