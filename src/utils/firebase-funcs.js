@@ -7,6 +7,8 @@ import {
   getDocs,
   query,
   where,
+  updateDoc,
+  arrayRemove,
 } from "firebase/firestore";
 const firestore = getFirestore();
 
@@ -63,4 +65,9 @@ export const readBookListDetails = async (isbnArr) => {
   }
 
   return bookDetails;
+};
+
+export const deleteBookFromUserLibrary = async (isbn, email) => {
+  const docRef = doc(firestore, `users/${email}`);
+  await updateDoc(docRef, { bookLibrary: arrayRemove(isbn) });
 };

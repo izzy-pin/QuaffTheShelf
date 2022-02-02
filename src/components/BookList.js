@@ -8,11 +8,16 @@ import {
   Image,
   Pressable,
 } from "react-native";
-import { readUserLibrary, readBookListDetails } from "../utils/firebase-funcs";
+import {
+  readUserLibrary,
+  readBookListDetails,
+  deleteBookFromUserLibrary,
+} from "../utils/firebase-funcs";
 import defaultCover from "../assets/defaultCover.png";
 
 const BookList = ({ navigation }) => {
   const [books, setBooks] = useState([]);
+  const [deleteRefresh, setDeleteRefresh] = useState(false);
   const auth = getAuth();
   const user = auth.currentUser;
   const email = user.email;
@@ -25,7 +30,14 @@ const BookList = ({ navigation }) => {
             navigation.navigate("BookDetails", { isbn });
           }}
           onLongPress={() => {
-            alert("hurray! Deleted");
+            deleteBookFromUserLibrary(isbn, email)
+              .then(() => {
+                setDeleteRefresh(true);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+            console.log("line 29 ->", isbn);
           }}
         >
           <Text style={styles.title}>{bookTitle}</Text>
@@ -41,6 +53,7 @@ const BookList = ({ navigation }) => {
   };
 
   useEffect(() => {
+    setDeleteRefresh(false);
     readUserLibrary(email)
       .then((isbnLibrary) => {
         return isbnLibrary;
@@ -54,7 +67,7 @@ const BookList = ({ navigation }) => {
       .catch((err) => {
         console.log("Error: ", err);
       });
-  }, []);
+  }, [deleteRefresh]);
 
   return (
     <View>
