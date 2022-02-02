@@ -9,17 +9,17 @@ import {
 } from "firebase/firestore";
 import app from "../../firebase-config";
 
-async function bookRecs() {
+async function drinkRecs(email, isbn) {
   let firstRec = "";
   let secondRec = "";
   const userDrinkArray = [];
   const firestore = getFirestore();
-  const bookISBN = "9780007447862";
-  const bookRef = doc(firestore, `books/${bookISBN}`);
+
+  const bookRef = doc(firestore, `books/${isbn}`);
   const bookSnap = await getDoc(bookRef);
   const bookVotes = bookSnap.data().drinkPairings;
 
-  const userRef = doc(firestore, `users/phone@test.com`);
+  const userRef = doc(firestore, `users/${email}`);
   const userSnap = await getDoc(userRef);
 
   const alcoholUserDrinks =
@@ -64,36 +64,43 @@ async function bookRecs() {
     userDrinkObject[drink] = 0;
   });
 
-  const userArray = Object.keys(bookVotes);
+  if (bookVotes) {
+    const userArray = Object.keys(bookVotes);
 
-  for (let i = 0; i < userArray.length; i++) {
-    let bookDrink = bookVotes[userArray[i]].drink;
-    if (userDrinkObject.hasOwnProperty(bookDrink)) {
-      userDrinkObject[bookDrink] += 1;
+    for (let i = 0; i < userArray.length; i++) {
+      let bookDrink = bookVotes[userArray[i]].drink;
+      if (userDrinkObject.hasOwnProperty(bookDrink)) {
+        userDrinkObject[bookDrink] += 1;
+      }
     }
-  }
 
-  let findHighestScore = Object.values(userDrinkObject);
-  let highScore = Math.max(...findHighestScore);
+    let findHighestScore = Object.values(userDrinkObject);
+    let highScore = Math.max(...findHighestScore);
 
-  for (let drink in userDrinkObject) {
-    if (userDrinkObject[drink] === highScore && !firstRec) {
-      firstRec = drink;
-      userDrinkObject[drink] = 0;
+    for (let drink in userDrinkObject) {
+      if (userDrinkObject[drink] === highScore && !firstRec) {
+        firstRec = drink;
+        userDrinkObject[drink] = 0;
+      }
     }
-  }
 
-  findHighestScore = Object.values(userDrinkObject);
-  highScore = Math.max(...findHighestScore);
+    findHighestScore = Object.values(userDrinkObject);
+    highScore = Math.max(...findHighestScore);
 
-  for (let drink in userDrinkObject) {
-    if (userDrinkObject[drink] === highScore) {
-      secondRec = drink;
-      userDrinkObject[drink] = 0;
+    for (let drink in userDrinkObject) {
+      if (userDrinkObject[drink] === highScore) {
+        secondRec = drink;
+        userDrinkObject[drink] = 0;
+      }
     }
+  } else {
+    firstRec =
+      userDrinkArray[Math.floor(Math.random() * userDrinkArray.length + 1)];
+    secondRec =
+      userDrinkArray[Math.floor(Math.random() * userDrinkArray.length + 1)];
   }
 
   return { firstRec, secondRec, userDrinkArray };
 }
 
-export default bookRecs;
+export default drinkRecs;
