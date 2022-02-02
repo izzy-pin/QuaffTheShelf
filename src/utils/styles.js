@@ -40,6 +40,35 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
+  headerBar:{
+    borderBottomWidth:1
+  },
+
+  headerBurger: {
+    height: 35,
+    resizeMode: "contain",
+    width: 35,
+  },
+  headerContent: {
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 10,
+    width: "100%",
+  },
+  headerImage: {
+    height: 50,
+    resizeMode: "contain",
+    width: 50,
+  },
+  headerLogOutText: {
+    fontSize: 18,
+  },
+  headerScreenTopMargin: {
+    height: 20,
+  },
+
   landingBackground: {},
 
   landingContent: {
