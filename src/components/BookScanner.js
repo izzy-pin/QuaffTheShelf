@@ -21,6 +21,7 @@ const Barcode = ({ navigation }) => {
   const [number, setNumber] = useState(null);
   const [isbn, setIsbn] = useState({});
   const [isError, setIsError] = useState(false);
+
   const auth = getAuth();
   const user = auth.currentUser;
   const email = user.email;
@@ -35,6 +36,7 @@ const Barcode = ({ navigation }) => {
 
   const handleBarCodeScanned = ({ data }) => {
     setScanned(true);
+
     let bookAddress = "";
     number
       ? (bookAddress = `http://openlibrary.org/api/volumes/brief/isbn/${number}.json`)
@@ -113,6 +115,9 @@ const Barcode = ({ navigation }) => {
           keyboardType="numeric"
           onSubmitEditing={handleBarCodeScanned}
         />
+        <TouchableOpacity style={styles.button} onPress={handleBarCodeScanned}>
+          <Text style={styles.buttonText}>Submit</Text>
+        </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
