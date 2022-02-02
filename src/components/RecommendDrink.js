@@ -1,7 +1,12 @@
 import React from "react";
-import { Text, Button, View, ScrollView, StyleSheet } from "react-native";
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  ScrollView,
+} from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
-
+import styles from "../utils/styles";
 import drinkRecs from "../utils/drinkRecs";
 import addVotes from "../utils/addVotes";
 import { useEffect, useState } from "react/cjs/react.development";
@@ -14,6 +19,8 @@ const RecommendDrink = ({ email, isbn }) => {
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([]);
   const [isError, setIsError] = useState(false);
+
+  DropDownPicker.setListMode("MODAL")
 
   useEffect(() => {
     setIsError(false);
@@ -43,28 +50,59 @@ const RecommendDrink = ({ email, isbn }) => {
         <Text>You have chosen {acceptedDrink}!</Text>
       ) : counter === 0 ? (
         <View>
-          <Text>{recs.firstRec}</Text>
-          <Button title="👍" onPress={() => handleUpVote(recs.firstRec)} />
-          <Button
-            title="👎"
-            onPress={() => setCounter((currentCount) => (currentCount += 1))}
-          />
+          <Text style={styles.bookDetailsDrink}>
+                    We recommend for you:
+                  </Text>
+          <Text style={styles.bookDetailsDrinkPick}
+                    adjustsFontSizeToFit
+                    numberOfLines={1}>{recs.firstRec}</Text>
+          <View style={styles.recContainer}>
+            <TouchableOpacity
+              style={styles.recButton}
+              onPress={() => handleUpVote(recs.firstRec)}
+            >
+              <Text style={styles.recButtonText}> 👍 </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.recButton}
+              onPress={() => setCounter((currentCount) => (currentCount += 1))}
+            >
+              <Text style={styles.recButtonText}> 👎 </Text>
+            </TouchableOpacity>
+
+          </View>
         </View>
       ) : counter === 1 ? (
-        <View>
-          <Text>{recs.secondRec}</Text>
-          <Button title="👍" onPress={() => handleUpVote(recs.secondRec)} />
-          <Button
-            title="👎"
-            onPress={() => setCounter((currentCount) => (currentCount += 1))}
-          />
-        </View>
+          <View>
+          <Text style={styles.bookDetailsDrink}>
+                    Alternatively, we recommend for you:
+                  </Text>
+          <Text style={styles.bookDetailsDrinkPick}
+                    adjustsFontSizeToFit
+                    numberOfLines={1}>{recs.secondRec}</Text>
+          <View style={styles.recContainer}>
+            <TouchableOpacity
+              style={styles.recButton}
+              onPress={() => handleUpVote(recs.secondRec)}
+            >
+              <Text style={styles.recButtonText}> 👍 </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.recButton}
+              onPress={() => setCounter((currentCount) => (currentCount += 1))}
+            >
+              <Text style={styles.recButtonText}> 👎 </Text>
+            </TouchableOpacity>
+
+          </View>
+          </View>
       ) : (
         <>
           <ScrollView nestedScrollEnabled={true}>
             <DropDownPicker
-              style={styles.dropDown}
-              listMode="SCROLLVIEW"
+              style={styles.recDropDown}
               open={open}
               value={value}
               items={items}
@@ -73,7 +111,12 @@ const RecommendDrink = ({ email, isbn }) => {
               setItems={setItems}
             />
             {value !== null ? (
-              <Button title="submit" onPress={() => handleUpVote(value)} />
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => handleUpVote(value)}>
+                  <Text style={styles.buttonText}>Sumbit</Text>
+              </TouchableOpacity>
+              
             ) : null}
           </ScrollView>
         </>
@@ -81,14 +124,5 @@ const RecommendDrink = ({ email, isbn }) => {
     </View>
   );
 };
-
-const crimson = "crimson";
-const styles = StyleSheet.create({
-  dropDown: {
-    backgroundColor: crimson,
-    fontSize: 15,
-    fontWeight: "bold",
-  },
-});
 
 export default RecommendDrink;

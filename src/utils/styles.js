@@ -1,15 +1,15 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet} from "react-native";
 
 const wine = "#B43F5E";
 const white = "#FFFFFF";
 const glass = "rgba(150, 150, 150, 0.5)";
 const gray = "gray";
 
+
 const styles = StyleSheet.create({
   addBookButtonContainer: {
     alignItems: "center",
   },
-
   addBookScanner: {
     ...StyleSheet.absoluteFillObject,
     bottom: 175,
@@ -17,7 +17,6 @@ const styles = StyleSheet.create({
     right: 10,
     top: 10,
   },
-
   addBookScannerContainer: {
     flex: 1,
   },
@@ -26,6 +25,45 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     width: 300,
   },
+   bookDetailsBackground: {
+    resizeMode: "cover",
+  },
+
+  bookDetailsBook: {
+    alignItems: "center",
+    margin: 10,
+  },
+  bookDetailsBookImage: {
+    height: 236,
+    resizeMode: "contain",
+    width: 180,
+  },
+  bookDetailsBookText: {
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  bookDetailsBookTitle: {
+    fontSize: 20,
+    marginBottom: 5,
+  },
+  bookDetailsContainer: {
+    alignItems: "center",
+    flex: 1,
+  },
+  bookDetailsDrink: {
+    fontSize: 18,
+    marginTop: 10,
+    textAlign: "center",
+  },
+  bookDetailsDrinkPick: {
+    fontSize: 36,
+    textAlign: "center",
+  },
+
+  bookDetailsGradiant: {
+    paddingBottom: 250
+  },
+
 
   bookLibraryText: {
     marginTop: 15,
@@ -46,6 +84,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
+ 
   button: {
     backgroundColor: wine,
     borderRadius: 10,
@@ -129,6 +168,31 @@ const styles = StyleSheet.create({
     textAlign: "center",
     width: 200,
   },
+    recButton: {
+    backgroundColor: wine,
+    borderRadius: 10,
+    margin: 5,
+    width: 100,
+  },
+
+  recButtonText: {
+    borderColor: gray,
+    borderRadius: 10,
+    borderWidth: 2,
+    color: white,
+    fontSize: 15,
+    padding: 10,
+    textAlign: "center",
+  },
+
+  recContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+
+  recDropDown:{
+    width: 250
+  },
 
   profilePicture: {
     borderRadius: 80 / 2,
@@ -145,6 +209,7 @@ const styles = StyleSheet.create({
   userProfileText: {
     margin: 10,
   },
+
 });
 
 export default styles;
