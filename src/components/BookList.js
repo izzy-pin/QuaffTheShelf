@@ -77,7 +77,7 @@ const BookList = ({ navigation }) => {
   ) : (
     <View>
       <View>
-        <Text>Total books in library : {books.length}</Text>
+        <Text>You have {books.length} books in your library</Text>
         {books.length == 0 ? (
           <Text>Nothing to see here!</Text>
         ) : (

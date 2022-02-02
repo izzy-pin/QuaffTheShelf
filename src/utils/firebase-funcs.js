@@ -71,3 +71,16 @@ export const deleteBookFromUserLibrary = async (isbn, email) => {
   const docRef = doc(firestore, `users/${email}`);
   await updateDoc(docRef, { bookLibrary: arrayRemove(isbn) });
 };
+
+export const getUserProfile = async (email) => {
+  const docRef = doc(firestore, `users/${email}`);
+  const snapshot = await getDoc(docRef);
+  if (snapshot.exists()) {
+    const docData = snapshot.data();
+    const stringData = JSON.stringify(docData);
+    const parsedData = JSON.parse(stringData);
+    return { name: parsedData.firstName, profilePicUrl: parsedData.imgUrl };
+  } else {
+    return undefined;
+  }
+};
