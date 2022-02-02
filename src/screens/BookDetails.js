@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Text, View, Image, StyleSheet, ScrollView } from "react-native";
 import { readBookDetails } from "../utils/firebase-funcs";
 import { getAuth } from "firebase/auth";
-
 import defaultCover from "../assets/defaultCover.png";
+import RecommendDrink from "../components/RecommendDrink";
 
 const BookDetails = ({ route }) => {
   const { isbn } = route.params;
@@ -51,7 +51,9 @@ const BookDetails = ({ route }) => {
             <Text style={styles.drink}>
               Drink: {book.drinkPairings[email].drink}
             </Text>
-          ) : null}
+          ) : (
+            <RecommendDrink email={email} isbn={isbn} />
+          )}
         </View>
       </View>
     </ScrollView>
