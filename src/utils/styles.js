@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
   },
 
   bookLibraryText: {
+    marginBottom: 15,
     marginTop: 15,
     textAlign: "center",
   },
@@ -75,6 +76,7 @@ const styles = StyleSheet.create({
 
   bookListFlat: {
     backgroundColor: black,
+    marginBottom: 5,
   },
 
   bookListItem: {
@@ -187,6 +189,12 @@ const styles = StyleSheet.create({
     width: 200,
   },
 
+  manualIsbn: {
+    alignItems: "center",
+    flex: 1,
+    justifyContent: "center",
+  },
+
   profilePicture: {
     borderRadius: 80 / 2,
     height: 80,
@@ -210,11 +218,12 @@ const styles = StyleSheet.create({
   },
 
   recContainer: {
-    flexDirection: "row",
+    alignItems: "center",
     justifyContent: "center",
   },
 
   recDropDown: {
+    marginVertical: 5,
     width: 250,
   },
 

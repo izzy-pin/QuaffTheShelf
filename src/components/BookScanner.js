@@ -107,13 +107,14 @@ const Barcode = ({ navigation }) => {
 
   if (hasPermission === false) {
     return (
-      <View>
+      <View style={styles.manualIsbn}>
         <TextInput
           onChangeText={setNumber}
           value={number}
           placeholder="enter ISBN"
           keyboardType="numeric"
           onSubmitEditing={handleBarCodeScanned}
+          style={styles.landingTextInputBox}
         />
         <TouchableOpacity style={styles.button} onPress={handleBarCodeScanned}>
           <Text style={styles.buttonText}>Submit</Text>

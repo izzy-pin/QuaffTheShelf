@@ -99,26 +99,28 @@ const RecommendDrink = ({ email, isbn }) => {
         </View>
       ) : (
         <>
-          <Text>Choose below from your favourite drinks instead</Text>
-          <ScrollView nestedScrollEnabled={true}>
-            <DropDownPicker
-              style={styles.recDropDown}
-              open={open}
-              value={value}
-              items={items}
-              setOpen={setOpen}
-              setValue={setValue}
-              setItems={setItems}
-            />
-            {value !== null ? (
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => handleUpVote(value)}
-              >
-                <Text style={styles.buttonText}>Save drink pairing</Text>
-              </TouchableOpacity>
-            ) : null}
-          </ScrollView>
+          <View style={styles.recContainer}>
+            <Text>Choose below from your favourite drinks instead</Text>
+            <ScrollView nestedScrollEnabled={true}>
+              <DropDownPicker
+                style={styles.recDropDown}
+                open={open}
+                value={value}
+                items={items}
+                setOpen={setOpen}
+                setValue={setValue}
+                setItems={setItems}
+              />
+              {value !== null ? (
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => handleUpVote(value)}
+                >
+                  <Text style={styles.buttonText}>Save drink pairing</Text>
+                </TouchableOpacity>
+              ) : null}
+            </ScrollView>
+          </View>
         </>
       )}
     </View>
