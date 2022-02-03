@@ -1,10 +1,10 @@
-import { StyleSheet} from "react-native";
+import { StyleSheet } from "react-native";
 
 const wine = "#B43F5E";
 const white = "#FFFFFF";
+const black = "#000000";
 const glass = "rgba(150, 150, 150, 0.5)";
 const gray = "gray";
-
 
 const styles = StyleSheet.create({
   addBookButtonContainer: {
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     width: 300,
   },
-   bookDetailsBackground: {
+  bookDetailsBackground: {
     resizeMode: "cover",
   },
 
@@ -61,30 +61,34 @@ const styles = StyleSheet.create({
   },
 
   bookDetailsGradiant: {
-    paddingBottom: 250
+    paddingBottom: 250,
   },
-
 
   bookLibraryText: {
     marginTop: 15,
     textAlign: "center",
   },
   bookListBookTitle: {
-    fontSize: 32,
+    color: white,
     textAlign: "center",
   },
 
+  bookListFlat: {
+    backgroundColor: black,
+  },
+
   bookListItem: {
-    marginHorizontal: 16,
-    marginVertical: 8,
-    padding: 20,
+    height: 150,
+    marginHorizontal: 8,
+    marginVertical: 18,
+    paddingVertical: 25,
+    width: 100,
   },
 
   bookListPressable: {
     alignItems: "center",
   },
 
- 
   button: {
     backgroundColor: wine,
     borderRadius: 10,
@@ -100,6 +104,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
     padding: 10,
     textAlign: "center",
+  },
+
+  chosenDrink: {
+    fontSize: 20,
   },
 
   headerBar: {
@@ -131,6 +139,16 @@ const styles = StyleSheet.create({
   },
   headerScreenTopMargin: {
     height: 20,
+  },
+
+  instruction: {
+    borderColor: wine,
+    borderRadius: 20,
+    borderWidth: 2,
+    fontSize: 20,
+    margin: 10,
+    padding: 10,
+    textAlign: "center",
   },
 
   landingBackground: {},
@@ -168,13 +186,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
     width: 200,
   },
-    recButton: {
+
+  profilePicture: {
+    borderRadius: 80 / 2,
+    height: 80,
+    resizeMode: "contain",
+    width: 80,
+  },
+  recButton: {
     backgroundColor: wine,
     borderRadius: 10,
     margin: 5,
     width: 100,
   },
-
   recButtonText: {
     borderColor: gray,
     borderRadius: 10,
@@ -190,26 +214,24 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
-  recDropDown:{
-    width: 250
+  recDropDown: {
+    width: 250,
   },
 
-  profilePicture: {
-    borderRadius: 80 / 2,
-    height: 80,
-    resizeMode: "contain",
-    width: 80,
+  userProfileButton: {
+    alignItems: "center",
   },
+
   userProfileContent: {
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-evenly",
     marginTop: 10,
   },
+
   userProfileText: {
     margin: 10,
   },
-
 });
 
 export default styles;
