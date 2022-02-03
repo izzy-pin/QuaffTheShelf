@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Text,
-  TouchableOpacity,
-  View,
-  ScrollView,
-} from "react-native";
+import { Text, TouchableOpacity, View, ScrollView } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import styles from "../utils/styles";
 import drinkRecs from "../utils/drinkRecs";
@@ -20,7 +15,7 @@ const RecommendDrink = ({ email, isbn }) => {
   const [items, setItems] = useState([]);
   const [isError, setIsError] = useState(false);
 
-  DropDownPicker.setListMode("MODAL")
+  DropDownPicker.setListMode("MODAL");
 
   useEffect(() => {
     setIsError(false);
@@ -47,15 +42,17 @@ const RecommendDrink = ({ email, isbn }) => {
   ) : (
     <View>
       {acceptedDrink.length > 0 ? (
-        <Text>You have chosen {acceptedDrink}!</Text>
+        <Text style={styles.chosenDrink}>You have chosen {acceptedDrink}!</Text>
       ) : counter === 0 ? (
         <View>
-          <Text style={styles.bookDetailsDrink}>
-                    We recommend for you:
-                  </Text>
-          <Text style={styles.bookDetailsDrinkPick}
-                    adjustsFontSizeToFit
-                    numberOfLines={1}>{recs.firstRec}</Text>
+          <Text style={styles.bookDetailsDrink}>We recommend for you:</Text>
+          <Text
+            style={styles.bookDetailsDrinkPick}
+            adjustsFontSizeToFit
+            numberOfLines={1}
+          >
+            {recs.firstRec}
+          </Text>
           <View style={styles.recContainer}>
             <TouchableOpacity
               style={styles.recButton}
@@ -70,17 +67,20 @@ const RecommendDrink = ({ email, isbn }) => {
             >
               <Text style={styles.recButtonText}> 👎 </Text>
             </TouchableOpacity>
-
           </View>
         </View>
       ) : counter === 1 ? (
-          <View>
+        <View>
           <Text style={styles.bookDetailsDrink}>
-                    Alternatively, we recommend for you:
-                  </Text>
-          <Text style={styles.bookDetailsDrinkPick}
-                    adjustsFontSizeToFit
-                    numberOfLines={1}>{recs.secondRec}</Text>
+            Alternatively, we recommend for you:
+          </Text>
+          <Text
+            style={styles.bookDetailsDrinkPick}
+            adjustsFontSizeToFit
+            numberOfLines={1}
+          >
+            {recs.secondRec}
+          </Text>
           <View style={styles.recContainer}>
             <TouchableOpacity
               style={styles.recButton}
@@ -95,11 +95,11 @@ const RecommendDrink = ({ email, isbn }) => {
             >
               <Text style={styles.recButtonText}> 👎 </Text>
             </TouchableOpacity>
-
           </View>
-          </View>
+        </View>
       ) : (
         <>
+          <Text>Choose below from your favourite drinks instead</Text>
           <ScrollView nestedScrollEnabled={true}>
             <DropDownPicker
               style={styles.recDropDown}
@@ -113,10 +113,10 @@ const RecommendDrink = ({ email, isbn }) => {
             {value !== null ? (
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => handleUpVote(value)}>
-                  <Text style={styles.buttonText}>Sumbit</Text>
+                onPress={() => handleUpVote(value)}
+              >
+                <Text style={styles.buttonText}>Save drink pairing</Text>
               </TouchableOpacity>
-              
             ) : null}
           </ScrollView>
         </>

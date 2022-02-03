@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 
-import { Button, View, Text, Image } from "react-native";
+import { View, Text, Image } from "react-native";
 import BookList from "../components/BookList";
 import { getAuth } from "firebase/auth";
 import { getUserProfile } from "../utils/firebase-funcs";
 import styles from "../utils/styles";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const Home = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -21,10 +22,9 @@ const Home = ({ navigation }) => {
     });
   }, []);
   return (
-    <View>
+    <View style={styles.userProfilesContentHigher}>
       <View style={styles.userProfileContent}>
         <Text style={styles.userProfileText}>Hi, {name}!</Text>
-
         <Image
           style={styles.profilePicture}
           source={
@@ -38,12 +38,17 @@ const Home = ({ navigation }) => {
       </View>
 
       <BookList navigation={navigation} />
-      <Button
-        title="Add new book, get drink pairing"
-        onPress={() => {
-          navigation.navigate("AddBook");
-        }}
-      />
+      <View style={styles.userProfileButton}>
+      <TouchableOpacity 
+      style={styles.button}
+      onPress={() => {
+        navigation.navigate("AddBook");
+      }}>
+        <Text style={styles.buttonText}>
+          Add a new book and get drink pairing!
+        </Text>
+      </TouchableOpacity>
+      </View>
       <Text style={styles.bookLibraryText}>
         Scroll through your library and click on a book to see your previous
         pairings

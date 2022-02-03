@@ -2,6 +2,7 @@ import { StyleSheet } from "react-native";
 
 const wine = "#B43F5E";
 const white = "#FFFFFF";
+const black = "#000000";
 const glass = "rgba(150, 150, 150, 0.5)";
 const gray = "gray";
 
@@ -68,14 +69,20 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   bookListBookTitle: {
-    fontSize: 32,
+    color: white,
     textAlign: "center",
   },
 
+  bookListFlat: {
+    backgroundColor: black,
+  },
+
   bookListItem: {
-    marginHorizontal: 16,
-    marginVertical: 8,
-    padding: 20,
+    height: 150,
+    marginHorizontal: 8,
+    marginVertical: 18,
+    paddingVertical: 25,
+    width: 100,
   },
 
   bookListPressable: {
@@ -97,6 +104,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
     padding: 10,
     textAlign: "center",
+  },
+
+  chosenDrink: {
+    fontSize: 20,
   },
 
   headerBar: {
@@ -128,6 +139,16 @@ const styles = StyleSheet.create({
   },
   headerScreenTopMargin: {
     height: 20,
+  },
+
+  instruction: {
+    borderColor: wine,
+    borderRadius: 20,
+    borderWidth: 2,
+    fontSize: 20,
+    margin: 10,
+    padding: 10,
+    textAlign: "center",
   },
 
   landingBackground: {},
@@ -178,7 +199,6 @@ const styles = StyleSheet.create({
     margin: 5,
     width: 100,
   },
-
   recButtonText: {
     borderColor: gray,
     borderRadius: 10,
@@ -198,12 +218,17 @@ const styles = StyleSheet.create({
     width: 250,
   },
 
+  userProfileButton: {
+    alignItems: "center",
+  },
+
   userProfileContent: {
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-evenly",
     marginTop: 10,
   },
+
   userProfileText: {
     margin: 10,
   },
