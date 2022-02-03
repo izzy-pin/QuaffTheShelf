@@ -74,7 +74,7 @@ const BookDetails = ({ route }) => {
               Object.keys(book.drinkPairings).includes(email) ? (
                 <>
                   <Text style={styles.bookDetailsDrink}>
-                    Your recomended Drink is:
+                    Your recommended drink is:
                   </Text>
                   <Text
                     style={styles.bookDetailsDrinkPick}

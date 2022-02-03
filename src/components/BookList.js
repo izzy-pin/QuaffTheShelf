@@ -41,13 +41,13 @@ const BookList = ({ navigation }) => {
               bookCover === "No image found" ? defaultCover : { uri: bookCover }
             }
           />
-          <Text 
-          style={styles.bookListBookTitle} 
-          adjustsFontSizeToFit
-          numberOfLines={2}>
-             {bookTitle}
+          <Text
+            style={styles.bookListBookTitle}
+            adjustsFontSizeToFit
+            numberOfLines={2}
+          >
+            {bookTitle}
           </Text>
-          
         </Pressable>
       </View>
     );
@@ -80,11 +80,11 @@ const BookList = ({ navigation }) => {
       <View>
         <View>
           <Text style={styles.bookLibraryText}>
-            You have {books.length} books in your library
+            You have {books.length} book(s) in your library
           </Text>
         </View>
         {books.length == 0 ? (
-          <Text>
+          <Text style={styles.instruction}>
             To get started finding the perfect drink pairing for your latest
             read, add your book to your library
           </Text>
