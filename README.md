@@ -24,6 +24,6 @@ Data from this response is then stored in a collection and is accessible to quer
 
 This project uses **eslint** and **husky** to ensure consistent syntax is used across the group during development.
 
-
+## Video Demo 
 https://user-images.githubusercontent.com/66907465/153005368-a33ed3f5-d9dd-446c-95f6-586a26cbb15a.mp4
 
